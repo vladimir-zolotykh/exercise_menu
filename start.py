@@ -4,12 +4,12 @@
 import os
 import tkinter as tk
 from PIL import Image, ImageTk
+from register import Register
 
 if __name__ == '__main__':
     root = tk.Tk()
-    image = Image.open(os.path.expanduser(
-        "~/Downloads/Screenshot_20250115-191509_Gallery.jpg"))
-    photo = ImageTk.PhotoImage(image)
-    label = tk.Label(root, image=photo)
-    label.pack()
+    reg_frame = Register(root)
+    reg_frame.grid(column=0, row=0, sticky=tk.NSEW)
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
     root.mainloop()
