@@ -31,12 +31,14 @@ if __name__ == '__main__':
     canvas = tk.Canvas(root)
     canvas.grid(column=0, row=0, sticky=tk.NSEW)
     canvas_row = 0
-    x = 25
-    y = 25
+    # x = 25
+    x = 0
+    # y = 25
+    y = 0
     for name, pic in name_pic_zip:
         print(f'{name = }, {y = }')
         img = get_exer_image(canvas_row, exer_pics)
-        canvas.create_image(x, y, image=img)
+        canvas.create_image(x, y, image=img, anchor=tk.NW)
         canvas.create_text(x + 50, y, text=name, anchor=tk.NW)
         canvas_row += 1
         y += 50
