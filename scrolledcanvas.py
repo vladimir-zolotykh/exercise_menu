@@ -7,7 +7,11 @@ import tkinter as tk
 class ScrolledCanvas(tk.Canvas):
     def __init__(self, owner, **kwargs):
         box = tk.Frame(owner)
+        owner.columnconfigure(0, weight=1)
+        owner.rowconfigure(0, weight=1)
         box.grid(column=0, row=0, sticky=tk.NSEW)
+        box.columnconfigure(0, weight=1) # FILL
+        box.rowconfigure(0, weight=1)    # FILL
         hbar = tk.Scrollbar(box, orient=tk.HORIZONTAL, command=self.xview)
         hbar.grid(column=0, row=1, sticky=tk.EW)
         vbar = tk.Scrollbar(box, orient=tk.VERTICAL, command=self.yview)
@@ -15,6 +19,8 @@ class ScrolledCanvas(tk.Canvas):
         kwargs.update({'xscrollcommand': hbar.set, 'yscrollcommand': vbar.set})
         super().__init__(box, **kwargs)
         self.grid(column=0, row=0, sticky=tk.NSEW)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
         for meth in dir(box):
             attr = getattr(box, meth)
             if meth.startswith('grid') and callable(attr):
