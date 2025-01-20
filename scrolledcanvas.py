@@ -24,8 +24,8 @@ class ScrolledCanvas(tk.Canvas):
         kwargs.update({'xscrollcommand': hbar.set, 'yscrollcommand': vbar.set})
         super().__init__(box, **kwargs)
         self.grid(column=0, row=0, sticky=tk.NSEW)
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=1)
+        # self.columnconfigure(0, weight=1)
+        # self.rowconfigure(0, weight=1)
         for meth in dir(box):
             attr = getattr(box, meth)
             if meth.startswith('grid') and callable(attr):
