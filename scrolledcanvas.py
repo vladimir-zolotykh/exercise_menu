@@ -4,7 +4,7 @@
 import tkinter as tk
 
 
-def fill(w: tk.Widget):
+def fill(w: tk.Grid):
     if hasattr(w, 'rowconfigure') and hasattr(w, 'columnconfigure'):
         for meth in ['rowconfigure', 'columnconfigure']:
             getattr(w, meth)(0, weight=1)
