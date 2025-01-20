@@ -7,8 +7,6 @@ import tkinter as tk
 class ScrolledCanvas(tk.Canvas):
     def __init__(self, owner, **kwargs):
         box = tk.Frame(owner)
-        owner.columnconfigure(0, weight=1)
-        owner.rowconfigure(0, weight=1)
         box.grid(column=0, row=0, sticky=tk.NSEW)
         box.columnconfigure(0, weight=1) # FILL
         box.rowconfigure(0, weight=1)    # FILL
