@@ -4,7 +4,10 @@
 import tkinter as tk
 
 
-def grid_expand(w: tk.Grid):
+def grid_expand(w):
+    # Equivalent to:
+    # w.rowconfigure(0, weight=1)
+    # w.columnconfigure(0, weight=1)
     for meth in ['rowconfigure', 'columnconfigure']:
         getattr(w, meth)(0, weight=1)
 
