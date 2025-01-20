@@ -4,7 +4,7 @@
 import tkinter as tk
 
 
-def fill(w: tk.Grid):
+def grid_fill(w: tk.Grid):
     if hasattr(w, 'rowconfigure') and hasattr(w, 'columnconfigure'):
         for meth in ['rowconfigure', 'columnconfigure']:
             getattr(w, meth)(0, weight=1)
@@ -14,7 +14,7 @@ class ScrolledCanvas(tk.Canvas):
     def __init__(self, owner, **kwargs):
         box = tk.Frame(owner)
         box.grid(column=0, row=0, sticky=tk.NSEW)
-        fill(box)
+        grid_fill(box)
         hbar = tk.Scrollbar(box, orient=tk.HORIZONTAL, command=self.xview)
         hbar.grid(column=0, row=1, sticky=tk.EW)
         vbar = tk.Scrollbar(box, orient=tk.VERTICAL, command=self.yview)
