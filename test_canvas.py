@@ -3,7 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 import tkinter as tk
 from PIL import Image, ImageTk
-from scrolledcanvas import ScrolledCanvas, grid_fill
+from scrolledcanvas import ScrolledCanvas, grid_expand
 
 SIZE = (50, 50)
 dirx = {name: Image.open(path).resize(SIZE)
@@ -16,7 +16,7 @@ dirx = {name: Image.open(path).resize(SIZE)
 
 if __name__ == '__main__':
     root = tk.Tk()
-    grid_fill(root)
+    grid_expand(root)
     canvas = ScrolledCanvas(root)
     canvas.grid(column=0, row=0, sticky=tk.NSEW)
     x = y = 0
