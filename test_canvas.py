@@ -3,7 +3,8 @@
 # PYTHON_ARGCOMPLETE_OK
 import tkinter as tk
 from PIL import Image, ImageTk
-from scrolledcanvas import ScrolledCanvas, grid_expand
+from scrolledcanvas import grid_expand
+from register import Register
 
 SIZE = (50, 50)
 dirx = {name: Image.open(path).resize(SIZE)
@@ -17,13 +18,10 @@ dirx = {name: Image.open(path).resize(SIZE)
 if __name__ == '__main__':
     root = tk.Tk()
     grid_expand(root)
-    canvas = ScrolledCanvas(root)
+    canvas = Register(root)
     canvas.grid(column=0, row=0, sticky=tk.NSEW)
-    x = y = 0
     _saved = []
     for name, img in dirx.items():
         _saved.append(ImageTk.PhotoImage(img))
-        canvas.create_image(x, y, image=_saved[-1], anchor=tk.NW)
-        canvas.create_text(x + SIZE[0], y, text=name, anchor=tk.NW)
-        y += SIZE[1]
+        canvas.append(image=_saved[-1], name=name)
     tk.mainloop()
