@@ -18,8 +18,7 @@ class ScrolledCanvas(tk.Canvas):
         hbar.grid(column=0, row=1, sticky=tk.EW)
         vbar = tk.Scrollbar(box, orient=tk.VERTICAL, command=self.yview)
         vbar.grid(column=1, row=0, sticky=tk.NS)
-        kwargs.update({'xscrollcommand': hbar.set, 'yscrollcommand': vbar.set,
-                       'scrollregion': (0, 0, 200, 100)})
+        kwargs.update({'xscrollcommand': hbar.set, 'yscrollcommand': vbar.set})
         super().__init__(box, **kwargs)
         self.grid(column=0, row=0, sticky=tk.NSEW)
         for meth in dir(box):
