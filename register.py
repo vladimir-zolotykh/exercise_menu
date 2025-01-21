@@ -16,7 +16,6 @@ dirx = {name: Image.open(path).resize(SIZE)
 
 class Register(ScrolledCanvas):
     def __init__(self, owner, **kwargs):
-        kwargs.update({'scrollregion': (0, 0, 200, 150)})
         super().__init__(owner, **kwargs)
         self._x = 0
         self._y = 0
@@ -30,7 +29,7 @@ class Register(ScrolledCanvas):
 class RegisterFrame(tk.Frame):
     def __init__(self, owner):
         super().__init__(owner)
-        canvas = Register(self)
+        canvas = Register(self, scrollregion=(0, 0, 120, 150))
         canvas.grid(column=0, row=0, sticky=tk.NSEW)
         for name, img in dirx.items():
             saved_photos.append(ImageTk.PhotoImage(img))
