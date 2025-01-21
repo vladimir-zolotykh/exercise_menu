@@ -8,8 +8,12 @@ SIZE = (50, 50)
 saved_photos = []
 dirx = {name: Image.open(path).resize(SIZE)
         for name, path in zip(
-                ("bench press", "squat", "deadlift"),
+                ("bench press", "squat", "deadlift",
+                 "pullup", "front squat", "overhead standing press"),
                 ("/usr/share/plymouth/debian-logo.png",
+                 "/usr/share/evolution/images/working.png",
+                 "/usr/share/help/C/five-or-more/figures/medium.png",
+                 "/usr/share/plymouth/debian-logo.png",
                  "/usr/share/evolution/images/working.png",
                  "/usr/share/help/C/five-or-more/figures/medium.png"))}
 
@@ -29,8 +33,9 @@ class Register(ScrolledCanvas):
 class RegisterFrame(tk.Frame):
     def __init__(self, owner):
         super().__init__(owner)
-        canvas = Register(self, scrollregion=(0, 0, 120, 150))
+        canvas = Register(self)
         canvas.grid(column=0, row=0, sticky=tk.NSEW)
         for name, img in dirx.items():
             saved_photos.append(ImageTk.PhotoImage(img))
             canvas.append(image=saved_photos[-1], name=name)
+        canvas.configure(scrollregion = canvas.bbox("all"))
