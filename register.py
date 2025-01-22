@@ -6,7 +6,7 @@ from collections import namedtuple
 import tkinter as tk
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
-SIZE = (50, 50)
+SIZE = (100, 100)
 saved_photos = []
 dirx = {name: Image.open(path).resize(SIZE)
         for name, path in zip(
