@@ -10,13 +10,17 @@ SIZE = (50, 50)
 saved_photos = []
 dirx = {name: Image.open(path).resize(SIZE)
         for name, path in zip(
-                ("bench press", "squat", "deadlift",
-                 "pullup", "front squat", "overhead standing press"),
+                ("bench press",
+                 "squat",
+                 "deadlift",
+                 "pullup",
+                 "front squat",
+                 "overhead standing press"),
                 (os.path.expanduser("~/Downloads/bench_press.jpg"),
                  "/usr/share/evolution/images/working.png",
                  "/usr/share/help/C/five-or-more/figures/medium.png",
-                 os.path.expanduser("~/Downloads/bench_press.jpg"),
                  "/usr/share/evolution/images/working.png",
+                 "/usr/share/help/C/five-or-more/figures/medium.png",
                  "/usr/share/help/C/five-or-more/figures/medium.png"))}
 
 
@@ -26,11 +30,11 @@ class Register(ScrolledCanvas):
         self._x = 0
         self._y = 0
 
-    def append(self, *, image=None, name=''):
+    def append(self, *, image=None, name='', exer_id=0):
         image_id = self.create_image(
             self._x, self._y, image=image, anchor=tk.NW)
-        name_id = self.create_text(
-            self._x + SIZE[0], self._y, text=name, anchor=tk.NW)
+        name_id = self.create_text(self._x + SIZE[0], self._y,
+                                   text=f'{name} ({exer_id})', anchor=tk.NW)
         self._y += SIZE[1]
         return image_id, name_id
 
@@ -40,7 +44,7 @@ ExerCash = namedtuple('ExerCash', "index image name image_id name_id")
 class RegisterCash(Register):
     def __init__(self, owner, **kwargs):
         super().__init__(owner, **kwargs)
-        self.index = 0
+        self.index = 1
         self.exercises: list[ExerCash] = []
         self.bind("<Button-1>", self.on_click)
 
@@ -63,7 +67,8 @@ class RegisterCash(Register):
             super().append(image=exer_cash.image, name=exer_cash.name)
 
     def append(self, *, image=None, name=''):
-        image_id, name_id = super().append(image=image, name=name)
+        image_id, name_id = super().append(
+            image=image, name=name, exer_id=self.index)
         self.exercises.append(ExerCash(
             self.index, image, name, image_id, name_id))
         self.index += 1
