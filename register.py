@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+import os
 from collections import namedtuple
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -11,10 +12,10 @@ dirx = {name: Image.open(path).resize(SIZE)
         for name, path in zip(
                 ("bench press", "squat", "deadlift",
                  "pullup", "front squat", "overhead standing press"),
-                ("/usr/share/plymouth/debian-logo.png",
+                (os.path.expanduser("~/Downloads/bench_press.jpg"),
                  "/usr/share/evolution/images/working.png",
                  "/usr/share/help/C/five-or-more/figures/medium.png",
-                 "/usr/share/plymouth/debian-logo.png",
+                 os.path.expanduser("~/Downloads/bench_press.jpg"),
                  "/usr/share/evolution/images/working.png",
                  "/usr/share/help/C/five-or-more/figures/medium.png"))}
 
