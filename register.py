@@ -45,9 +45,11 @@ class RegisterCash(Register):
 
     def on_click(self, event):
         item = self.find_closest(event.x, event.y)
-        item_type = self.type(item)
-        exer_name = self.itemcget(item[0], 'text')
-        print(f'{item_type = }, {exer_name = }')
+        try:
+            exer_name = self.itemcget(item[0], 'text')
+            print(f'{exer_name = }')
+        except tk.TclError:
+            print('Not a text clicked')
 
     def refresh(self):
         for item in self.find_all():
