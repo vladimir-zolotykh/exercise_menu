@@ -41,6 +41,13 @@ class RegisterCash(Register):
         super().__init__(owner, **kwargs)
         self.index = 0
         self.exercises: list[ExerCash] = []
+        self.bind("<Button-1>", self.on_click)
+
+    def on_click(self, event):
+        item = self.find_closest(event.x, event.y)
+        item_type = self.type(item)
+        exer_name = self.itemcget(item[0], 'text')
+        print(f'{item_type = }, {exer_name = }')
 
     def refresh(self):
         for item in self.find_all():
