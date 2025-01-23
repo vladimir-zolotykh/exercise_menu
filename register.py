@@ -4,6 +4,7 @@
 import os
 # from collections import namedtuple
 from typing import Any, NamedTuple
+import re
 import tkinter as tk
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
@@ -52,10 +53,14 @@ class ExerCash(NamedTuple):
 
 class ExerDir(list[ExerCash]):
     def find_name(self, name: str) -> ExerCash:
+        # name: 'bench press (1)'
+        requested_name = name
+        if  (m := re.match('(?P<exer_name>.*) \(\d+\)', name)):
+            requested_name = m.group('exer_name')
         for exer in self:
-            if exer.name == name:
+            if requested_name == exer.name:
                 return exer
-            raise TypeError(f'Exercise {name} not found')
+        raise TypeError(f'Exercise {name} not found')
 
 
 class RegisterCash(Register):
@@ -72,7 +77,7 @@ class RegisterCash(Register):
         try:
             exer_name = self.itemcget(item[0], 'text')
             self.selected_exer = self.exercises.find_name(exer_name)
-            print(f'{exer_name = }')
+            print(f'{self.selected_exer.name = }')
         except tk.TclError:
             print('Not a text clicked')
 
