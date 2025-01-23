@@ -14,7 +14,7 @@ if __name__ == '__main__':
     menu.add_command(label='Add exercise', command=None)
     root['menu'] = menu
     grid_expand(root)
-    frame = RegisterFrame(root)
+    frame = RegisterFrame(root, menu=menu)
     frame.grid(column=0, row=0, sticky=tk.NSEW)
     grid_expand(frame)
     tk.mainloop()

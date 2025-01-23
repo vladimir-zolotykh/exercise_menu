@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 import os
 # from collections import namedtuple
+from types import MethodType
 from typing import Any, NamedTuple
 import re
 import tkinter as tk
@@ -12,15 +13,15 @@ SIZE = (100, 100)
 saved_photos = []
 dirx = {name: Image.open(path).resize(SIZE)
         for name, path in zip(
-                ("bench press",
-                 "squat",
+                ("squat",
+                 "bench press",
                  "deadlift",
                  "pullup",
                  "front squat",
                  "overhead standing press"),
-                (os.path.expanduser("~/Downloads/bench_press.jpg"),
-                 "/usr/share/evolution/images/working.png",
-                 "/usr/share/help/C/five-or-more/figures/medium.png",
+                (os.path.expanduser("~/Downloads/squat.jpg"),
+                 os.path.expanduser("~/Downloads/bench_press.jpg"),
+                 os.path.expanduser("~/Downloads/deadlift.jpg"),
                  "/usr/share/evolution/images/working.png",
                  "/usr/share/help/C/five-or-more/figures/medium.png",
                  "/usr/share/help/C/five-or-more/figures/medium.png"))}
@@ -63,12 +64,22 @@ class ExerDir(list[ExerCash]):
         raise TypeError(f'Exercise {name} not found')
 
 
+def _change_label(self, exer_name):
+    for index in range(self.index(tk.END)):
+        if self.entrycget(index, 'label').startswith('Delete exercise'):
+            self.entryconfig(index, label=f'Delete exercise "{exer_name}"')
+            return
+    raise TypeError('No "Delete exercise item" found')
+
+
 class RegisterCash(Register):
-    def __init__(self, owner, **kwargs):
+    def __init__(self, owner, *, menu, **kwargs):
         super().__init__(owner, **kwargs)
         self.index = 1
         self.selected_exer: ExerCash = []
         self.exercises: ExerDir = ExerDir([])
+        if menu:
+            self.menu = menu
         # self.exercises: list[ExerCash] = []
         self.bind("<Button-1>", self.on_click)
 
@@ -77,6 +88,8 @@ class RegisterCash(Register):
         try:
             exer_name = self.itemcget(item[0], 'text')
             self.selected_exer = self.exercises.find_name(exer_name)
+            if self.menu:
+                MethodType(_change_label, self.menu)(self.selected_exer.name)
             print(f'{self.selected_exer.name = }')
         except tk.TclError:
             print('Not a text clicked')
@@ -99,9 +112,9 @@ class RegisterCash(Register):
         self.index += 1
 
 class RegisterFrame(tk.Frame):
-    def __init__(self, owner):
+    def __init__(self, owner, *, menu):
         super().__init__(owner)
-        canvas = RegisterCash(self)
+        canvas = RegisterCash(self, menu=menu)
         canvas.grid(column=0, row=0, sticky=tk.NSEW)
         for name, img in dirx.items():
             saved_photos.append(ImageTk.PhotoImage(img))
