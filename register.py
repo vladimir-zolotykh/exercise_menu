@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import os
-from collections import namedtuple
+# from collections import namedtuple
+from typing import Any, NamedTuple
 import tkinter as tk
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
@@ -38,7 +39,15 @@ class Register(ScrolledCanvas):
         self._y += SIZE[1]
         return image_id, name_id
 
-ExerCash = namedtuple('ExerCash', "index image name image_id name_id")
+# ExerCash = namedtuple('ExerCash', "index image name image_id name_id")
+
+
+class ExerCash(NamedTuple):
+    index: int
+    image: ImageTk.PhotoImage
+    name: str
+    image_id: int
+    name_id: int
 
 
 class RegisterCash(Register):
