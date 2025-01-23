@@ -50,17 +50,28 @@ class ExerCash(NamedTuple):
     name_id: int
 
 
+class ExerDir(list[ExerCash]):
+    def find_name(self, name: str) -> ExerCash:
+        for exer in self:
+            if exer.name == name:
+                return exer
+            raise TypeError(f'Exercise {name} not found')
+
+
 class RegisterCash(Register):
     def __init__(self, owner, **kwargs):
         super().__init__(owner, **kwargs)
         self.index = 1
-        self.exercises: list[ExerCash] = []
+        self.selected_exer: ExerCash = []
+        self.exercises: ExerDir = ExerDir([])
+        # self.exercises: list[ExerCash] = []
         self.bind("<Button-1>", self.on_click)
 
     def on_click(self, event):
         item = self.find_closest(event.x, event.y)
         try:
             exer_name = self.itemcget(item[0], 'text')
+            self.selected_exer = self.exercises.find_name(exer_name)
             print(f'{exer_name = }')
         except tk.TclError:
             print('Not a text clicked')
