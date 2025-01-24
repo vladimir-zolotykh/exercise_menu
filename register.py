@@ -67,7 +67,7 @@ class ExerDir(list[ExerCash]):
 def _change_label(self, exer_name):
     for index in range(self.index(tk.END)):
         if self.entrycget(index, 'label').startswith('Delete exercise'):
-            self.entryconfig(index, label=f'Delete exercise "{exer_name}"')
+            self.entryconfig(index, label=f'Delete exercise <{exer_name}>')
             return
     raise TypeError('No "Delete exercise item" found')
 
@@ -90,7 +90,6 @@ class RegisterCash(Register):
             self.selected_exer = self.exercises.find_name(exer_name)
             if self.menu:
                 MethodType(_change_label, self.menu)(self.selected_exer.name)
-            print(f'{self.selected_exer.name = }')
         except tk.TclError:
             print('Not a text clicked')
 
