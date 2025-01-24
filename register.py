@@ -53,6 +53,14 @@ class ExerCash(NamedTuple):
 
 
 class ExerDir(list[ExerCash]):
+    def findexerby_id(self, *, image_id, name_id):
+        for ex in self:
+            if ex.image_id == image_id or ex.name_id == name_id:
+                return ex
+        raise TypeError(f'Exercise with '
+                        f'{image_id} == {image_id} or {name_id} == {name_id}'
+                        f' not found')
+
     def find_name(self, name: str) -> ExerCash:
         # name: 'bench press (1)'
         requested_name = name
