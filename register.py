@@ -18,13 +18,18 @@ dirx = {name: Image.open(path).resize(SIZE)
                  "deadlift",
                  "pullup",
                  "front squat",
-                 "overhead standing press"),
+                 "overhead standing press",
+                 "biceps curl",
+                 "back plank"),
                 (os.path.expanduser("~/Downloads/squat.jpg"),
                  os.path.expanduser("~/Downloads/bench_press.jpg"),
                  os.path.expanduser("~/Downloads/deadlift.jpg"),
-                 "/usr/share/evolution/images/working.png",
-                 "/usr/share/help/C/five-or-more/figures/medium.png",
-                 "/usr/share/help/C/five-or-more/figures/medium.png"))}
+                 os.path.expanduser("~/Downloads/pullup.jpg"),
+                 os.path.expanduser("~/Downloads/front_squat.jpg"),
+                 os.path.expanduser("~/Downloads/overhead_press.jpg"),
+                 os.path.expanduser("~/Downloads/biceps_curl.jpg"),
+                 os.path.expanduser("~/Downloads/back_plank.jpg")))
+        }
 
 
 class Register(ScrolledCanvas):
