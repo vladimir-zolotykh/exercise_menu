@@ -9,7 +9,7 @@ import re
 import tkinter as tk
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
-SIZE = (100, 100)
+SIZE = (90, 160)
 saved_photos = []
 dirx = {name: Image.open(path).resize(SIZE)
         for name, path in zip(
