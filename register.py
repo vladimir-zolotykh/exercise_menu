@@ -11,25 +11,20 @@ from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
 SIZE = (90, 160)
 saved_photos = []
-dirx = {name: Image.open(path).resize(SIZE)
+EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
+             "overhead press","biceps curl", "back plank")
+dirx = {}
+try:
+    dirx = {
+        name: Image.open(path).resize(SIZE)
         for name, path in zip(
-                ("squat",
-                 "bench press",
-                 "deadlift",
-                 "pullup",
-                 "front squat",
-                 "overhead standing press",
-                 "biceps curl",
-                 "back plank"),
-                (os.path.expanduser("~/Downloads/squat.jpg"),
-                 os.path.expanduser("~/Downloads/bench_press.jpg"),
-                 os.path.expanduser("~/Downloads/deadlift.jpg"),
-                 os.path.expanduser("~/Downloads/pullup.jpg"),
-                 os.path.expanduser("~/Downloads/front_squat.jpg"),
-                 os.path.expanduser("~/Downloads/overhead_press.jpg"),
-                 os.path.expanduser("~/Downloads/biceps_curl.jpg"),
-                 os.path.expanduser("~/Downloads/back_plank.jpg")))
-        }
+                EXER_LIST,
+                (os.path.expanduser(f'~/Downloads/{xn.replace(" ", "_")}.jpg')
+                 for xn in EXER_LIST))
+    }
+except FileNotFoundError as e:
+    print(f'{e.filename}: file not found')
+    exit(1)
 
 
 class Register(ScrolledCanvas):
@@ -45,8 +40,6 @@ class Register(ScrolledCanvas):
                                    text=f'{name} ({exer_id})', anchor=tk.NW)
         self._y += SIZE[1]
         return image_id, name_id
-
-# ExerCash = namedtuple('ExerCash', "index image name image_id name_id")
 
 
 class ExerCash(NamedTuple):
