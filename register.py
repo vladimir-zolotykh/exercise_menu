@@ -4,12 +4,14 @@
 import os
 # from collections import namedtuple
 from types import MethodType
-from typing import Any, NamedTuple
+from typing import Any, NamedTuple, Callable
 import re
+from itertools import dropwhile
 import tkinter as tk
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
-SIZE = (90, 160)
+# SIZE = (90, 160)
+SIZE = (45, 80)
 saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
              "overhead press","biceps curl", "back plank")
@@ -51,23 +53,27 @@ class ExerCash(NamedTuple):
 
 
 class ExerDir(list[ExerCash]):
-    def findexerby_id(self, *, image_id, name_id):
-        for ex in self:
-            if ex.image_id == image_id or ex.name_id == name_id:
-                return ex
-        raise TypeError(f'Exercise with '
-                        f'{image_id} == {image_id} or {name_id} == {name_id}'
-                        f' not found')
-
-    def find_name(self, name: str) -> ExerCash:
-        # name: 'bench press (1)'
-        requested_name = name
-        if  (m := re.match('(?P<exer_name>.*) \(\d+\)', name)):
-            requested_name = m.group('exer_name')
-        for exer in self:
-            if requested_name == exer.name:
-                return exer
-        raise TypeError(f'Exercise {name} not found')
+    def find_exer(
+            self, *, name: str = '', image_id: int = 0, name_id: int = 0
+    ) -> ExerCash:
+        err: TypeError
+        predicate = Callable[[ExerDir], bool]
+        if name:
+            requested_name = name
+            if  (m := re.match('(?P<exer_name>.*) \(\d+\)', name)):
+                requested_name = m.group('exer_name')
+                predicate = lambda exer: exer.name != requested_name
+            err = TypeError(f'Exercise {name} not found')
+        elif image_id or name_id:
+            predicate = lambda exer: (exer.image_id != image_id and
+                                      exer.name_id != name_id)
+            err = TypeError(
+                f'Exercise with '
+                f'{image_id} == {image_id} or {name_id} == {name_id}'
+                f' not found')
+        else:
+            raise TypeError('Specify name, image_id, or name_id')
+        return next(dropwhile(predicate, list(self)))
 
 
 def _change_label(self, exer_name):
@@ -90,10 +96,11 @@ class RegisterCash(Register):
         self.bind("<Button-1>", self.on_click)
 
     def on_click(self, event):
-        item = self.find_closest(event.x, event.y)
+        item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
         try:
             exer_name = self.itemcget(item[0], 'text')
-            self.selected_exer = self.exercises.find_name(exer_name)
+            self.selected_exer = self.exercises.find_exer(name=exer_name)
+            # self.selected_exer = self.exercises.find_exer(name='foo')
             if self.menu:
                 MethodType(_change_label, self.menu)(self.selected_exer.name)
         except tk.TclError:
