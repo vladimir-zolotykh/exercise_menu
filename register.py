@@ -102,8 +102,7 @@ class RegisterCash(Register):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
         try:
             exer_name = self.itemcget(item[0], 'text')
-            # self.selected_exer = self.exercises.find_exer(name=exer_name)
-            self.selected_exer = self.exercises.find_exer(name='foo (10)')
+            self.selected_exer = self.exercises.find_exer(name=exer_name)
             if self.menu:
                 MethodType(_change_label, self.menu)(self.selected_exer.name)
         except tk.TclError:
