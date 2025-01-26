@@ -99,13 +99,14 @@ class RegisterCash(Register):
 
     def on_click(self, event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
-        if self.selected_exer:
-            self.itemconfig(self.selected_exer.name_id, fill='black')
-        self.selected_exer = self.exercises.find_exer(
+        ex = self.selected_exer
+        if ex:
+            self.itemconfig(ex.name_id, fill='black')
+        ex = self.selected_exer = self.exercises.find_exer(
             image_id=item[0], name_id=item[0])
-        self.itemconfig(self.selected_exer.name_id, fill='lightblue')
+        self.itemconfig(ex.name_id, fill='lightblue')
         if self.menu:
-            MethodType(_change_label, self.menu)(self.selected_exer.name)
+            MethodType(_change_label, self.menu)(ex.name)
 
     def refresh(self):
         for item in self.find_all():
