@@ -95,14 +95,13 @@ class RegisterCash(Register):
         self.exercises: ExerDir = ExerDir([])
         if menu:
             self.menu = menu
-        # self.exercises: list[ExerCash] = []
         self.bind("<Button-1>", self.on_click)
 
     def on_click(self, event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
         try:
-            exer_name = self.itemcget(item[0], 'text')
-            self.selected_exer = self.exercises.find_exer(name=exer_name)
+            self.selected_exer = self.exercises.find_exer(
+                image_id=item[0], name_id=item[0])
             if self.menu:
                 MethodType(_change_label, self.menu)(self.selected_exer.name)
         except tk.TclError:
@@ -112,9 +111,6 @@ class RegisterCash(Register):
         for item in self.find_all():
             if self.type(item) in ('image', 'text'):
                 self.delete(item)
-        # for exer_cash in self.exercises:
-        #     self.delete(exer_cash.image_id)
-        #     self.delete(exer_cash.name_id)
         for exer_cash in self.exercises:
             super().append(image=exer_cash.image, name=exer_cash.name)
 
