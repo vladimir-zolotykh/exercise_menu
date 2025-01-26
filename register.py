@@ -57,13 +57,13 @@ class ExerDir(list[ExerCash]):
             self, *, name: str = '', image_id: int = 0, name_id: int = 0
     ) -> ExerCash:
         err: TypeError
-        predicate = Callable[[ExerDir], bool]
+        predicate: Callable[[ExerDir], bool] = lambda exer: False
         if name:
             requested_name = name
             if  (m := re.match('(?P<exer_name>.*) \(\d+\)', name)):
                 requested_name = m.group('exer_name')
                 predicate = lambda exer: exer.name != requested_name
-            err = TypeError(f'Exercise {name} not found')
+            err = TypeError(f'Exercise {requested_name} not found')
         elif image_id or name_id:
             predicate = lambda exer: (exer.image_id != image_id and
                                       exer.name_id != name_id)
@@ -73,7 +73,10 @@ class ExerDir(list[ExerCash]):
                 f' not found')
         else:
             raise TypeError('Specify name, image_id, or name_id')
-        return next(dropwhile(predicate, list(self)))
+        try:
+            return next(dropwhile(predicate, self))
+        except StopIteration:
+            raise err
 
 
 def _change_label(self, exer_name):
@@ -99,8 +102,8 @@ class RegisterCash(Register):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
         try:
             exer_name = self.itemcget(item[0], 'text')
-            self.selected_exer = self.exercises.find_exer(name=exer_name)
-            # self.selected_exer = self.exercises.find_exer(name='foo')
+            # self.selected_exer = self.exercises.find_exer(name=exer_name)
+            self.selected_exer = self.exercises.find_exer(name='foo (10)')
             if self.menu:
                 MethodType(_change_label, self.menu)(self.selected_exer.name)
         except tk.TclError:
