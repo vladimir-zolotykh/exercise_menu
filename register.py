@@ -4,10 +4,12 @@
 import os
 # from collections import namedtuple
 from types import MethodType
-from typing import Any, NamedTuple, Callable
+from dataclasses import dataclass
+from typing import Any, Callable
 import re
 from itertools import dropwhile
 import tkinter as tk
+from tkinter import font as tkfont
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
 IMG_SIZE = (90, 160)
@@ -48,11 +50,22 @@ class Register(ScrolledCanvas):
             self._x, self._y, image=image, anchor=tk.NW)
         name_id = self.create_text(self._x + IMG_SIZE[0], self._y,
                                    text=ex_str, anchor=tk.NW)
+
+        def font_metrics() -> tuple[int, int]:
+            name: str = self.itemcget(name_id, 'font') # 'TkDefaultFont'
+            font = tkfont.nametofont(name)
+            width = font.measure(ex_str) // len(ex_str)
+            height = font.metrics("linespace")
+            # font_width = 6, font_height = 17
+            return width, height
+
+        font_metrics()
         self._y += IMG_SIZE[1]
         return image_id, name_id
 
 
-class ExerCash(NamedTuple):
+@dataclass
+class ExerCash:
     index: int
     image: ImageTk.PhotoImage
     name: str
@@ -65,7 +78,7 @@ class ExerDir(list[ExerCash]):
             self, *, name: str = '', image_id: int = 0, name_id: int = 0
     ) -> ExerCash:
         err: TypeError
-        predicate: Callable[[ExerDir], bool] = lambda exer: False
+        predicate: Callable[[ExerCash], bool] = lambda exer: False
         if name:
             requested_name = name
             if  (m := re.match('(?P<exer_name>.*) \(\d+\)', name)):
@@ -99,8 +112,10 @@ class RegisterCash(Register):
     def __init__(self, owner, *, menu, **kwargs):
         super().__init__(owner, **kwargs)
         self.index = 1
-        self.selected_exer: ExerCash = []
-        self.exercises: ExerDir = ExerDir([])
+        self.selected_exer = []
+        self.exercises = ExerDir([])
+        # self.selected_exer: ExerCash = []
+        # self.exercises: ExerDir = ExerDir([])
         if menu:
             self.menu = menu
         self.bind("<Button-1>", self.on_click)
