@@ -10,15 +10,14 @@ from itertools import dropwhile
 import tkinter as tk
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
-# SIZE = (90, 160)
-SIZE = (45, 80)
+IMG_SIZE = (90, 160)
 saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
              "overhead press","biceps curl", "back plank")
 dirx = {}
 try:
     dirx = {
-        name: Image.open(path).resize(SIZE)
+        name: Image.open(path).resize(IMG_SIZE)
         for name, path in zip(
                 EXER_LIST,
                 (os.path.expanduser(f'~/Downloads/{xn.replace(" ", "_")}.jpg')
@@ -35,12 +34,21 @@ class Register(ScrolledCanvas):
         self._x = 0
         self._y = 0
 
+    def toggle_selection_rect(self):
+        x0, y0 = self._x, self._y
+        x1 = x0 + 250  # len(ex_str) * 10
+        y1 = y0 + IMG_SIZE[1]
+        self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=4,
+                         fill='lightblue')
+
     def append(self, *, image=None, name='', exer_id=0):
+        ex_str = f'{name} ({exer_id})'
+        self.toggle_selection_rect()
         image_id = self.create_image(
             self._x, self._y, image=image, anchor=tk.NW)
-        name_id = self.create_text(self._x + SIZE[0], self._y,
-                                   text=f'{name} ({exer_id})', anchor=tk.NW)
-        self._y += SIZE[1]
+        name_id = self.create_text(self._x + IMG_SIZE[0], self._y,
+                                   text=ex_str, anchor=tk.NW)
+        self._y += IMG_SIZE[1]
         return image_id, name_id
 
 
