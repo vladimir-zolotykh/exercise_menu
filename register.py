@@ -101,9 +101,9 @@ class ExerDir(list[ExerCash]):
 
 
 def _change_label(self, exer_name):
-    for index in range(self.index(tk.END)):
-        if self.entrycget(index, 'label').startswith('Delete exercise'):
-            self.entryconfig(index, label=f'Delete exercise <{exer_name}>')
+    for item in range(self.index(tk.END)):
+        if self.entrycget(item, 'label').startswith('Delete exercise'):
+            self.entryconfig(item, label=f'Delete exercise <{exer_name}>')
             return
     raise TypeError('No "Delete exercise item" found')
 
