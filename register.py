@@ -111,7 +111,7 @@ def _change_label(self, exer_name):
 class RegisterCash(Register):
     def __init__(self, owner, *, menu, **kwargs):
         super().__init__(owner, **kwargs)
-        self.index = 1
+        self.exer_i = 1
         self.selected_exer = []
         self.exercises = ExerDir([])
         # self.selected_exer: ExerCash = []
@@ -140,10 +140,10 @@ class RegisterCash(Register):
 
     def append(self, *, image=None, name=''):
         image_id, name_id = super().append(
-            image=image, name=name, exer_id=self.index)
+            image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ExerCash(
-            self.index, image, name, image_id, name_id))
-        self.index += 1
+            self.exer_i, image, name, image_id, name_id))
+        self.exer_i += 1
 
 class RegisterFrame(tk.Frame):
     def __init__(self, owner, *, menu):
