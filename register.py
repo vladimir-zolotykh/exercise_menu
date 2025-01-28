@@ -5,7 +5,7 @@ import os
 # from collections import namedtuple
 from types import MethodType
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Optional, Any, Callable
 import re
 from itertools import dropwhile
 import tkinter as tk
@@ -109,10 +109,12 @@ def _change_label(self, exer_name):
 
 
 class RegisterCash(Register):
-    def __init__(self, owner, *, menu, **kwargs):
+    def __init__(
+            self, owner: tk.Widget, *, menu: tk.Menu, **kwargs: dict[str, Any]
+    ):
         super().__init__(owner, **kwargs)
         self.exer_i = 1
-        self.selected_exer = []
+        self.selected_exer: Optional[ExerCash] = None
         self.exercises = ExerDir([])
         # self.selected_exer: ExerCash = []
         # self.exercises: ExerDir = ExerDir([])
@@ -125,8 +127,11 @@ class RegisterCash(Register):
         ex = self.selected_exer
         if ex:
             self.itemconfig(ex.name_id, fill='black')
-        ex = self.selected_exer = self.exercises.find_exer(
-            image_id=item[0], name_id=item[0])
+        if (ex := self.exercises.find_exer(image_id=item[0],
+                                            name_id=item[0])):
+            self.selected_exer = ex
+        # ex = self.selected_exer = self.exercises.find_exer(
+        #     image_id=item[0], name_id=item[0])
         self.itemconfig(ex.name_id, fill='lightblue')
         if self.menu:
             MethodType(_change_label, self.menu)(ex.name)
