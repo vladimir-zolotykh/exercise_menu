@@ -66,11 +66,11 @@ class Register(ScrolledCanvas):
 
 @dataclass
 class ExerCash:
-    index: int
+    index: int                  # exercise number or canvas row
     image: ImageTk.PhotoImage
-    name: str
-    image_id: int
-    name_id: int
+    name: str                   # 'squat' or 'bench press'
+    image_id: int               # canvas image id (exer. pic)
+    name_id: int                # canvas text id (exer. name)
 
 
 class ExerDir(list[ExerCash]):
