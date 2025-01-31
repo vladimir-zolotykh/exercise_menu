@@ -34,8 +34,8 @@ class Register(ScrolledCanvas):
     def __init__(self, owner: tk.Widget, **kwargs: dict[str, Any]):
         super().__init__(owner, **kwargs)
         self._row: int = 0
-        self._x = 0
-        self._y = 0
+        self._x: int = 0
+        self._y: int = 0
 
     def toggle_selection_rect(self):
         x0, y0 = self._x, self._y
@@ -43,6 +43,14 @@ class Register(ScrolledCanvas):
         y1 = y0 + IMG_SIZE[1]
         self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=4,
                          fill='lightblue')
+
+
+    def _get_xy(self, row: Optional[int] = None) -> tuple[int, int]:
+        if not row:
+            return self._x, self._y
+        else:
+            return 0, 0
+
 
     def append(self, *, image=None, name='', exer_id=0):
         ex_str = f'{name} ({exer_id})'
@@ -62,6 +70,7 @@ class Register(ScrolledCanvas):
 
         font_metrics()
         self._y += IMG_SIZE[1]
+        self._row += 1
         return image_id, name_id
 
 
