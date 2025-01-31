@@ -45,7 +45,7 @@ class Register(ScrolledCanvas):
 
     def append(self, *, image=None, name='', exer_id=0):
         ex_str = f'{name} ({exer_id})'
-        self.toggle_selection_rect()
+        # self.toggle_selection_rect()
         image_id = self.create_image(
             self._x, self._y, image=image, anchor=tk.NW)
         name_id = self.create_text(self._x + IMG_SIZE[0], self._y,
