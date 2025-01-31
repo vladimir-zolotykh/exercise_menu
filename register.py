@@ -55,10 +55,14 @@ class Register(ScrolledCanvas):
     def append(self, *, image=None, name='', exer_id=0):
         ex_str = f'{name} ({exer_id})'
         # self.toggle_selection_rect()
-        image_id = self.create_image(
-            self._x, self._y, image=image, anchor=tk.NW)
-        name_id = self.create_text(self._x + IMG_SIZE[0], self._y,
+        x0, y0 = self._get_xy()
+        image_id = self.create_image(x0, y0, image=image, anchor=tk.NW)
+        name_id = self.create_text(x0 + IMG_SIZE[0], y0,
                                    text=ex_str, anchor=tk.NW)
+        # image_id = self.create_image(
+        #     self._x, self._y, image=image, anchor=tk.NW)
+        # name_id = self.create_text(self._x + IMG_SIZE[0], self._y,
+        #                            text=ex_str, anchor=tk.NW)
 
         def font_metrics() -> tuple[int, int]:
             name: str = self.itemcget(name_id, 'font') # 'TkDefaultFont'
