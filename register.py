@@ -31,8 +31,9 @@ except FileNotFoundError as e:
 
 
 class Register(ScrolledCanvas):
-    def __init__(self, owner, **kwargs):
+    def __init__(self, owner: tk.Widget, **kwargs: dict[str, Any]):
         super().__init__(owner, **kwargs)
+        self._row: int = 0
         self._x = 0
         self._y = 0
 
