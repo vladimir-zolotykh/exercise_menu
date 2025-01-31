@@ -12,14 +12,15 @@ import tkinter as tk
 from tkinter import font as tkfont
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
-IMG_SIZE = (90, 160)
+import geometry as G
+
 saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
              "overhead press","biceps curl", "back plank")
 dirx = {}
 try:
     dirx = {
-        name: Image.open(path).resize(IMG_SIZE)
+        name: Image.open(path).resize(G.IMAGE)
         for name, path in zip(
                 EXER_LIST,
                 (os.path.expanduser(f'~/Downloads/{xn.replace(" ", "_")}.jpg')
@@ -40,7 +41,7 @@ class Register(ScrolledCanvas):
     def toggle_selection_rect(self):
         x0, y0 = self._x, self._y
         x1 = x0 + 250  # len(ex_str) * 10
-        y1 = y0 + IMG_SIZE[1]
+        y1 = y0 + G.IMGAGE[1]
         self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=4,
                          fill='lightblue')
 
@@ -49,16 +50,18 @@ class Register(ScrolledCanvas):
         if not row:
             return self._x, self._y
         else:
-            return 0, 0
+            return 0 + G.BORDER[0], row * G.ROW_HEIGHT
 
 
     def append(self, *, image=None, name='', exer_id=0):
         ex_str = f'{name} ({exer_id})'
         # self.toggle_selection_rect()
-        x0, y0 = self._get_xy()
+        x0, y0 = self._get_xy(self._row)
         image_id = self.create_image(x0, y0, image=image, anchor=tk.NW)
-        name_id = self.create_text(x0 + IMG_SIZE[0], y0,
-                                   text=ex_str, anchor=tk.NW)
+        x1 = x0 + G.BORDER[0] + G.IMAGE[0] + G.BORDER[0]
+        name_id = self.create_text(x1, y0, text=ex_str, anchor=tk.NW)
+        # name_id = self.create_text(x0 + G.IMAGE[0], y0,
+        #                            text=ex_str, anchor=tk.NW)
         # image_id = self.create_image(
         #     self._x, self._y, image=image, anchor=tk.NW)
         # name_id = self.create_text(self._x + IMG_SIZE[0], self._y,
@@ -73,7 +76,7 @@ class Register(ScrolledCanvas):
             return width, height
 
         font_metrics()
-        self._y += IMG_SIZE[1]
+        # self._y += IMG_SIZE[1]
         self._row += 1
         return image_id, name_id
 
