@@ -47,10 +47,10 @@ class Register(ScrolledCanvas):
 
 
     def _get_xy(self, row: Optional[int] = None) -> tuple[int, int]:
-        if not row:
+        if row is None:
             return self._x, self._y
         else:
-            return 0 + G.BORDER[0], row * G.ROW_HEIGHT
+            return 0 + G.BORDER.width, row * G.ROW_HEIGHT + G.BORDER.height
 
 
     def append(self, *, image=None, name='', exer_id=0):

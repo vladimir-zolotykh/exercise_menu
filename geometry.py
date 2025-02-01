@@ -11,6 +11,6 @@ class Size(NamedTuple):
 
 IMAGE = Size(90, 160)
 BORDER = Size(2, 2)
-ROW_HEIGHT = IMAGE[0] + 2 * BORDER[1]
+ROW_HEIGHT = IMAGE.height + 2 * BORDER.height
 TEXT_WIDTH = 200                # 10 pix / char
 
