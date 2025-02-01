@@ -144,8 +144,10 @@ class RegisterCash(Register):
         x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
               G.TEXT_WIDTH)
         y1 = y0 + G.BORDER.height + G.IMAGE.height
-        self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=1,
-                         fill=fill)
+        # self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=1,
+        #                  fill=fill)
+        self.create_line(*map(float, (x0, y0, x1, y0, x1, y1, x0, y1)),
+                         width=2, fill=fill)
         
 
     def on_click(self, event: tk.Event):
