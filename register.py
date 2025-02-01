@@ -83,7 +83,7 @@ class Register(ScrolledCanvas):
 
 @dataclass
 class ExerCash:
-    index: int                  # exercise number or canvas row
+    row: int                    # canvas row for exercise
     image: ImageTk.PhotoImage
     name: str                   # 'squat' or 'bench press'
     image_id: int               # canvas image id (exer. pic)
