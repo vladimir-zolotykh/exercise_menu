@@ -139,17 +139,29 @@ class RegisterCash(Register):
             self.menu = menu
         self.bind("<Button-1>", self.on_click)
 
-    def on_click(self, event):
+    def draw_rect(self, row: int, fill: str):
+        x0, y0 = self._get_xy(row)
+        x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
+              G.TEXT_WIDTH)
+        y1 = y0 + G.BORDER.height + G.IMAGE.height
+        self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=1,
+                         fill=fill)
+        
+
+    def on_click(self, event: tk.Event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
-        ex = self.selected_exer
-        if ex:
-            self.itemconfig(ex.name_id, fill='black')
+        if self.selected_exer:
+            # self.itemconfig(self.selected_exer.name_id, fill='black')
+            self.draw_rect(row=self.selected_exer.row, fill='black')
+        ex: ExerCash
         if (ex := self.exercises.find_exer(image_id=item[0],
                                             name_id=item[0])):
             self.selected_exer = ex
         # ex = self.selected_exer = self.exercises.find_exer(
         #     image_id=item[0], name_id=item[0])
-        self.itemconfig(ex.name_id, fill='lightblue')
+        # highlight ex.row
+        # self.itemconfig(ex.name_id, fill='lightblue')
+        self.draw_rect(row=ex.row, fill='lightblue')
         if self.menu:
             MethodType(_change_label, self.menu)(ex.name)
 
