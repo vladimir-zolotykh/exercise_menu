@@ -38,13 +38,6 @@ class Register(ScrolledCanvas):
         self._x: int = 0
         self._y: int = 0
 
-    # def toggle_selection_rect(self):
-    #     x0, y0 = self._x, self._y
-    #     x1 = x0 + 250  # len(ex_str) * 10
-    #     y1 = y0 + G.IMGAGE[1]
-    #     self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=4,
-    #                      fill='lightblue')
-
 
     def _get_xy(self, row: Optional[int] = None) -> tuple[int, int]:
         if row is None:
@@ -60,12 +53,6 @@ class Register(ScrolledCanvas):
         image_id = self.create_image(x0, y0, image=image, anchor=tk.NW)
         x1 = x0 + G.BORDER[0] + G.IMAGE[0] + G.BORDER[0]
         name_id = self.create_text(x1, y0, text=ex_str, anchor=tk.NW)
-        # name_id = self.create_text(x0 + G.IMAGE[0], y0,
-        #                            text=ex_str, anchor=tk.NW)
-        # image_id = self.create_image(
-        #     self._x, self._y, image=image, anchor=tk.NW)
-        # name_id = self.create_text(self._x + IMG_SIZE[0], self._y,
-        #                            text=ex_str, anchor=tk.NW)
 
         def font_metrics() -> tuple[int, int]:
             name: str = self.itemcget(name_id, 'font') # 'TkDefaultFont'
@@ -76,7 +63,6 @@ class Register(ScrolledCanvas):
             return width, height
 
         font_metrics()
-        # self._y += IMG_SIZE[1]
         self._row += 1
         return image_id, name_id
 
@@ -133,8 +119,6 @@ class RegisterCash(Register):
         self.exer_i = 0
         self.selected_exer: Optional[ExerCash] = None
         self.exercises = ExerDir([])
-        # self.selected_exer: ExerCash = []
-        # self.exercises: ExerDir = ExerDir([])
         if menu:
             self.menu = menu
         self.bind("<Button-1>", self.on_click)
@@ -146,8 +130,6 @@ class RegisterCash(Register):
         x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
               G.TEXT_WIDTH)
         y1 = y0 + G.BORDER.height + G.IMAGE.height
-        # self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=1,
-        #                  fill=fill)
         self.create_line(*map(float, (x0, y0, x1, y0, x1, y1, x0, y1)),
                          width=2, fill=fill)
         
@@ -155,18 +137,11 @@ class RegisterCash(Register):
     def on_click(self, event: tk.Event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
         if self.selected_exer:
-            # self.itemconfig(self.selected_exer.name_id, fill='black')
-            # self.draw_rect(row=self.selected_exer.row, fill='black')
             self.draw_rect(row=self.selected_exer.row)
         ex: ExerCash
         if (ex := self.exercises.find_exer(image_id=item[0],
                                             name_id=item[0])):
             self.selected_exer = ex
-        # ex = self.selected_exer = self.exercises.find_exer(
-        #     image_id=item[0], name_id=item[0])
-        # highlight ex.row
-        # self.itemconfig(ex.name_id, fill='lightblue')
-        print(f'{ex.row = }')
         self.draw_rect(row=ex.row, fill='lightblue')
         if self.menu:
             MethodType(_change_label, self.menu)(ex.name)
