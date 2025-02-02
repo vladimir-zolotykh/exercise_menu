@@ -5,7 +5,7 @@ import os
 # from collections import namedtuple
 from types import MethodType
 from dataclasses import dataclass
-from typing import Optional, Any, Callable
+from typing import Optional, Any, Callable, cast, TypedDict
 import re
 from itertools import dropwhile
 import tkinter as tk
@@ -76,11 +76,16 @@ class ExerCash:
     name_id: int                # canvas text id (exer. name)
 
 
+class FindArgs(TypedDict, total=False):
+    name: str
+    image_id: int
+    name_id: int
+
+
 class ExerDir(list[ExerCash]):
     def find_exer(
             self, *, name: str = '', image_id: int = 0, name_id: int = 0
     ) -> ExerCash:
-        print(f'{name = }, {image_id = }, {name_id = }')
         err: TypeError
         predicate: Callable[[ExerCash], bool] = lambda exer: False
         if name:
@@ -135,11 +140,25 @@ class RegisterCash(Register):
 
     def on_click(self, event: tk.Event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
+        # self.type(item[0]): 'image', 'text', or 'line'
+        typ: str = cast(str, self.type(item[0]))
+        if typ == 'line':       # ignore the border
+            return
         if self.selected_exer:
             self.draw_rect(row=self.selected_exer.row)
         ex: ExerCash
-        if (ex := self.exercises.find_exer(image_id=item[0],
-                                            name_id=item[0])):
+        # kw: dict[str, int] = {}
+        kw: FindArgs = {}
+        if typ == 'image':
+            kw['image_id'] = item[0]
+        elif typ == 'text':
+            kw['name_id'] = item[0]
+        else:
+            raise TypeError(f'{typ}: Invalid item type '
+                            f'(must be "image" or "text")')
+        # if (ex := self.exercises.find_exer(image_id=item[0],
+        #                                     name_id=item[0])):
+        if (ex := self.exercises.find_exer(**kw)):
             self.selected_exer = ex
         self.draw_rect(row=ex.row, fill='lightblue')
         if self.menu:
