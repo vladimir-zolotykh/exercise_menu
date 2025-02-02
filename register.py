@@ -130,7 +130,7 @@ class RegisterCash(Register):
             self, owner: tk.Widget, *, menu: tk.Menu, **kwargs: dict[str, Any]
     ):
         super().__init__(owner, **kwargs)
-        self.exer_i = 1
+        self.exer_i = 0
         self.selected_exer: Optional[ExerCash] = None
         self.exercises = ExerDir([])
         # self.selected_exer: ExerCash = []
@@ -139,7 +139,9 @@ class RegisterCash(Register):
             self.menu = menu
         self.bind("<Button-1>", self.on_click)
 
-    def draw_rect(self, row: int, fill: str):
+    def draw_rect(self, row: int, fill: Optional[str] = None):
+        if fill is None:
+            fill = self.cget('background')
         x0, y0 = self._get_xy(row)
         x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
               G.TEXT_WIDTH)
@@ -154,7 +156,8 @@ class RegisterCash(Register):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
         if self.selected_exer:
             # self.itemconfig(self.selected_exer.name_id, fill='black')
-            self.draw_rect(row=self.selected_exer.row, fill='black')
+            # self.draw_rect(row=self.selected_exer.row, fill='black')
+            self.draw_rect(row=self.selected_exer.row)
         ex: ExerCash
         if (ex := self.exercises.find_exer(image_id=item[0],
                                             name_id=item[0])):
