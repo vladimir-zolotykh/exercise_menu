@@ -38,12 +38,12 @@ class Register(ScrolledCanvas):
         self._x: int = 0
         self._y: int = 0
 
-    def toggle_selection_rect(self):
-        x0, y0 = self._x, self._y
-        x1 = x0 + 250  # len(ex_str) * 10
-        y1 = y0 + G.IMGAGE[1]
-        self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=4,
-                         fill='lightblue')
+    # def toggle_selection_rect(self):
+    #     x0, y0 = self._x, self._y
+    #     x1 = x0 + 250  # len(ex_str) * 10
+    #     y1 = y0 + G.IMGAGE[1]
+    #     self.create_line(x0, y0, x1, y0, x1, y1, x0, y1, width=4,
+    #                      fill='lightblue')
 
 
     def _get_xy(self, row: Optional[int] = None) -> tuple[int, int]:
@@ -163,6 +163,7 @@ class RegisterCash(Register):
         #     image_id=item[0], name_id=item[0])
         # highlight ex.row
         # self.itemconfig(ex.name_id, fill='lightblue')
+        print(f'{ex.row = }')
         self.draw_rect(row=ex.row, fill='lightblue')
         if self.menu:
             MethodType(_change_label, self.menu)(ex.name)
