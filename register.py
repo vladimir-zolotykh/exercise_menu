@@ -80,6 +80,7 @@ class ExerDir(list[ExerCash]):
     def find_exer(
             self, *, name: str = '', image_id: int = 0, name_id: int = 0
     ) -> ExerCash:
+        print(f'{name = }, {image_id = }, {name_id = }')
         err: TypeError
         predicate: Callable[[ExerCash], bool] = lambda exer: False
         if name:
@@ -91,10 +92,8 @@ class ExerDir(list[ExerCash]):
         elif image_id or name_id:
             predicate = lambda exer: (exer.image_id != image_id and
                                       exer.name_id != name_id)
-            err = TypeError(
-                f'Exercise with '
-                f'{image_id} == {image_id} or {name_id} == {name_id}'
-                f' not found')
+            err = TypeError(f'Exercise with ' f'{image_id = } or {name_id = }'
+                            f' not found')
         else:
             raise TypeError('Specify name, image_id, or name_id')
         try:
