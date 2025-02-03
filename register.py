@@ -4,7 +4,7 @@
 import os
 # from collections import namedtuple
 from types import MethodType
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Any, Callable, cast, TypedDict
 import re
 from itertools import dropwhile
@@ -38,7 +38,6 @@ class Register(ScrolledCanvas):
         self._x: int = 0
         self._y: int = 0
 
-
     def _get_xy(self, row: Optional[int] = None) -> tuple[int, int]:
         if row is None:
             return self._x, self._y
@@ -68,12 +67,24 @@ class Register(ScrolledCanvas):
 
 
 @dataclass
+class SelectRect:
+    # x0, y0, x1, y1, ...
+    coord: list[float] = field(default_factory=list)
+    # line_id = canv.create_line()
+    line_id: Optional[int] = None
+    # 'background', 'lightblue'
+    fill: Optional[str] = None
+
+
+@dataclass
 class ExerCash:
     row: int                    # canvas row for exercise
     image: ImageTk.PhotoImage
     name: str                   # 'squat' or 'bench press'
     image_id: int               # canvas image id (exer. pic)
     name_id: int                # canvas text id (exer. name)
+    # highlighted rectangle around selected exercise
+    select_rect: SelectRect
 
 
 class FindArgs(TypedDict, total=False):
@@ -127,15 +138,37 @@ class RegisterCash(Register):
             self.menu = menu
         self.bind("<Button-1>", self.on_click)
 
-    def draw_rect(self, row: int, fill: Optional[str] = None):
-        if fill is None:
-            fill = self.cget('background')
+
+    def highlight_rect(self, exer_row: ExerCash, fill: Optional[str] = None):
+        """highlight_rect(EX_ROW, fill='lightblue') - to highlight,
+        highlight_rect(EX) - undo highlight"""
+        
+        if fill is None and isinstance(exer_row.select_rect.line_id, int):
+            line_id = exer_row.select_rect.line_id
+            exer_row.select_rect.line_id = None
+            self.delete(line_id)
+            return
+        row = exer_row.row
         x0, y0 = self._get_xy(row)
         x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
               G.TEXT_WIDTH)
         y1 = y0 + G.BORDER.height + G.IMAGE.height
-        self.create_line(*map(float, (x0, y0, x1, y0, x1, y1, x0, y1)),
-                         width=2, fill=fill)
+        coord = list(map(float, (x0, y0, x1, y0, x1, y1, x0, y1)))
+        exer_row.select_rect.coord = coord
+        exer_row.select_rect.fill = fill
+        exer_row.select_rect.line_id = self.create_line(
+            *coord, width=2, fill=fill)
+
+
+    # def draw_rect(self, row: int, fill: Optional[str] = None) -> int:
+    #     if fill is None:
+    #         fill = self.cget('background')
+    #     x0, y0 = self._get_xy(row)
+    #     x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
+    #           G.TEXT_WIDTH)
+    #     y1 = y0 + G.BORDER.height + G.IMAGE.height
+    #     return self.create_line(*map(float, (x0, y0, x1, y0, x1, y1, x0, y1)),
+    #                             width=2, fill=fill)
         
 
     def on_click(self, event: tk.Event):
@@ -144,8 +177,9 @@ class RegisterCash(Register):
         typ: str = cast(str, self.type(item[0]))
         if typ == 'line':       # ignore the border
             return
-        if self.selected_exer:
-            self.draw_rect(row=self.selected_exer.row)
+        if self.selected_exer:  # undo selected rect
+            # self.draw_rect(row=self.selected_exer.row)
+            self.highlight_rect(self.selected_exer)
         ex: ExerCash
         # kw: dict[str, int] = {}
         kw: FindArgs = {}
@@ -160,7 +194,8 @@ class RegisterCash(Register):
         #                                     name_id=item[0])):
         if (ex := self.exercises.find_exer(**kw)):
             self.selected_exer = ex
-        self.draw_rect(row=ex.row, fill='lightblue')
+        # self.draw_rect(row=ex.row, fill='lightblue')
+        self.highlight_rect(ex, fill='lightblue')
         if self.menu:
             MethodType(_change_label, self.menu)(ex.name)
 
@@ -175,7 +210,7 @@ class RegisterCash(Register):
         image_id, name_id = super().append(
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ExerCash(
-            self.exer_i, image, name, image_id, name_id))
+            self.exer_i, image, name, image_id, name_id, SelectRect()))
         self.exer_i += 1
 
 class RegisterFrame(tk.Frame):
