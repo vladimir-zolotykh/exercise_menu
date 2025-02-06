@@ -118,6 +118,10 @@ class ExerDir(list[ExerCash]):
         except StopIteration:
             raise err
 
+    def delete_exer(self, exer_cash: ExerCash) -> None:
+        """Delete EXER_CASH from self"""
+        del self[self.index(exer_cash)]
+
 
 def _change_label(self, exer_name):
     """Change menu's item LABEL"""
@@ -210,14 +214,17 @@ class RegisterCash(Register):
             raise TypeError('Select exercise to delete')
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
-            self.delete(ex.image_id)
-            self.delete(ex.name_id)
+            # self.delete(ex.image_id)
+            # self.delete(ex.name_id)
+            self.exercises.delete_exer(ex)
+            self.refresh()
 
 
     def refresh(self):
         for item in self.find_all():
-            if self.type(item) in ('image', 'text'):
-                self.delete(item)
+            # if self.type(item) in ('image', 'text'):
+            #     self.delete(item)
+            self.delete(item)
         for exer_cash in self.exercises:
             super().append(image=exer_cash.image, name=exer_cash.name)
 
