@@ -10,6 +10,7 @@ import re
 from itertools import dropwhile
 import tkinter as tk
 from tkinter import font as tkfont
+from tkinter.messagebox import askokcancel
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
 import geometry as G
@@ -119,6 +120,8 @@ class ExerDir(list[ExerCash]):
 
 
 def _change_label(self, exer_name):
+    """Change menu's item LABEL"""
+
     for item in range(self.index(tk.END)):
         if self.entrycget(item, 'label').startswith('Delete exercise'):
             self.entryconfig(item, label=f'Delete exercise <{exer_name}>')
@@ -136,6 +139,16 @@ class RegisterCash(Register):
         self.exercises = ExerDir([])
         if menu:
             self.menu = menu
+
+            def set_delete_command():
+                for item in range(menu.index(tk.END)):
+                    if menu.entrycget(item, 'label').startswith(
+                            'Delete exercise'):
+                        menu.entryconfig(item, command=self.delete_exer)
+                        return
+                raise TypeError('No "Delete exercise item" found')
+                
+            set_delete_command()
         self.bind("<Button-1>", self.on_click)
 
 
@@ -187,6 +200,19 @@ class RegisterCash(Register):
         self.highlight_rect(ex, fill='lightblue')
         if self.menu:
             MethodType(_change_label, self.menu)(ex.name)
+
+    def delete_exer(self, exer_name: str = None) -> None:
+        if exer_name:
+            ex = self.exercises.find_exer(name=exer_name)
+        elif self.selected_exer:
+            ex = self.selected_exer
+        else:
+            raise TypeError('Select exercise to delete')
+        if askokcancel(f'{__name__}.askokcancel',
+                       f'Delete exercise {ex.name}? ', parent=self):
+            self.delete(ex.image_id)
+            self.delete(ex.name_id)
+
 
     def refresh(self):
         for item in self.find_all():
