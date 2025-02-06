@@ -35,6 +35,9 @@ except FileNotFoundError as e:
 class Register(ScrolledCanvas):
     def __init__(self, owner: tk.Widget, **kwargs: dict[str, Any]):
         super().__init__(owner, **kwargs)
+        self._rewind()
+
+    def _rewind(self):
         self._row: int = 0
         self._x: int = 0
         self._y: int = 0
@@ -225,8 +228,11 @@ class RegisterCash(Register):
             # if self.type(item) in ('image', 'text'):
             #     self.delete(item)
             self.delete(item)
+        super()._rewind()
         for exer_cash in self.exercises:
             super().append(image=exer_cash.image, name=exer_cash.name)
+        self.configure(scrollregion = self.bbox("all"))
+            
 
     def append(self, *, image=None, name=''):
         image_id, name_id = super().append(
