@@ -37,7 +37,7 @@ class Register(ScrolledCanvas):
         super().__init__(owner, **kwargs)
         self._rewind()
 
-    def _rewind(self):
+    def _rewind(self) -> None:
         self._row: int = 0
         self._x: int = 0
         self._y: int = 0
@@ -136,6 +136,14 @@ def _change_label(self, exer_name):
     raise TypeError('No "Delete exercise item" found')
 
 
+def _set_delete_command(self, del_cmd: Callable[[], None]):
+    for item in range(self.index(tk.END)):
+        if self.entrycget(item, 'label').startswith('Delete exercise'):
+            self.entryconfig(item, command=del_cmd)
+            return
+    raise TypeError('No "Delete exercise item" found')
+
+
 class RegisterCash(Register):
     def __init__(
             self, owner: tk.Widget, *, menu: tk.Menu, **kwargs: dict[str, Any]
@@ -145,17 +153,8 @@ class RegisterCash(Register):
         self.selected_exer: Optional[ExerCash] = None
         self.exercises = ExerDir([])
         if menu:
+            MethodType(_set_delete_command, menu)(self.delete_exer)
             self.menu = menu
-
-            def set_delete_command():
-                for item in range(menu.index(tk.END)):
-                    if menu.entrycget(item, 'label').startswith(
-                            'Delete exercise'):
-                        menu.entryconfig(item, command=self.delete_exer)
-                        return
-                raise TypeError('No "Delete exercise item" found')
-                
-            set_delete_command()
         self.bind("<Button-1>", self.on_click)
 
 
@@ -177,7 +176,7 @@ class RegisterCash(Register):
         exer_row.select_rect.coord = coord
         exer_row.select_rect.fill = fill
         exer_row.select_rect.line_id = self.create_line(
-            *coord, width=2, fill=fill)
+            *coord, width=2, fill=cast(str, fill))
 
 
     def on_click(self, event: tk.Event):
@@ -208,7 +207,7 @@ class RegisterCash(Register):
         if self.menu:
             MethodType(_change_label, self.menu)(ex.name)
 
-    def delete_exer(self, exer_name: str = None) -> None:
+    def delete_exer(self, exer_name: Optional[str] = None) -> None:
         if exer_name:
             ex = self.exercises.find_exer(name=exer_name)
         elif self.selected_exer:
@@ -224,10 +223,7 @@ class RegisterCash(Register):
 
 
     def refresh(self):
-        for item in self.find_all():
-            # if self.type(item) in ('image', 'text'):
-            #     self.delete(item)
-            self.delete(item)
+        self.delete('all')
         super()._rewind()
         for exer_cash in self.exercises:
             super().append(image=exer_cash.image, name=exer_cash.name)
