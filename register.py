@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from typing import Optional, Any, Callable, cast, TypedDict
 import re
 from itertools import dropwhile
+import copy
 import tkinter as tk
 from tkinter import font as tkfont
 from tkinter.messagebox import askokcancel
@@ -157,6 +158,9 @@ class RegisterCash(Register):
             self.menu = menu
         self.bind("<Button-1>", self.on_click)
 
+    def _rewind(self):
+        super()._rewind()
+        self.exer_i = 0
 
     def highlight_rect(self, exer_row: ExerCash, fill: Optional[str] = None):
         """highlight_rect(EX_ROW, fill='lightblue') - to highlight,
@@ -222,11 +226,22 @@ class RegisterCash(Register):
             self.refresh()
 
 
-    def refresh(self):
+    def refresh(self) -> None:
         self.delete('all')
-        super()._rewind()
-        for exer_cash in self.exercises:
-            super().append(image=exer_cash.image, name=exer_cash.name)
+        # super()._rewind()
+        self._rewind()
+        exer_dir_copy: list[ExerCash] = copy.copy(self.exercises)
+        # for exer_cash in self.exercises:
+        self.exercises = ExerDir()
+        for exer_cash in exer_dir_copy:
+            self.append(image=exer_cash.image, name=exer_cash.name)
+            # image_id, name_id = super().append(
+            #     image=exer_cash.image,
+            #     name=exer_cash.name, exer_id=self.exer_i)
+            # self.exercises.append(ExerCash(
+            #     self.exer_i, image, name, image_id, name_id, SelectRect()))
+            # self.exer_id += 1
+        del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
             
 
