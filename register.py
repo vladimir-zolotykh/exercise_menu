@@ -49,7 +49,7 @@ class Register(ScrolledCanvas):
             return 0 + G.BORDER.width, row * G.ROW_HEIGHT + G.BORDER.height
 
 
-    def append(self, *, image=None, name='', exer_id=0):
+    def append(self, *, image=None, name='', exer_id=0) -> tuple[int, int]:
         ex_str = f'{name} ({exer_id})'
         # self.toggle_selection_rect()
         x0, y0 = self._get_xy(self._row)
