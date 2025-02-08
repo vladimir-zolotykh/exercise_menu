@@ -154,6 +154,9 @@ class RegisterCash(Register):
         self.selected_exer: Optional[ExerCash] = None
         self.exercises = ExerDir([])
         if menu:
+            menu.add_command(label='Delete exercise', command=lambda: None)
+            menu.add_command(label='Add exercise', command=lambda: None)
+            
             MethodType(_set_delete_command, menu)(self.delete_exer)
             self.menu = menu
         self.bind("<Button-1>", self.on_click)
