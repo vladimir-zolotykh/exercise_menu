@@ -235,12 +235,6 @@ class RegisterCash(Register):
         self.exercises = ExerDir()
         for exer_cash in exer_dir_copy:
             self.append(image=exer_cash.image, name=exer_cash.name)
-            # image_id, name_id = super().append(
-            #     image=exer_cash.image,
-            #     name=exer_cash.name, exer_id=self.exer_i)
-            # self.exercises.append(ExerCash(
-            #     self.exer_i, image, name, image_id, name_id, SelectRect()))
-            # self.exer_id += 1
         del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
             
