@@ -150,7 +150,10 @@ class RegisterCash(Register):
             add_menu = tk.Menu(menu, tearoff=0)
             menu.add_cascade(label='Add', menu=add_menu)
             add_menu.add_command(label='Add exercise', command=lambda: None)
-            menu.add_command(label='Delete exercise', command=self.delete_exer)
+            del_menu = tk.Menu(menu, tearoff=0)
+            menu.add_cascade(label='Del', menu=del_menu)
+            del_menu.add_command(label='Delete exercise',
+                                 command=self.delete_exer)
         self.bind("<Button-1>", self.on_click)
 
     def _rewind(self):
