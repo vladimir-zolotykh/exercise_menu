@@ -11,7 +11,7 @@ from itertools import dropwhile
 import copy
 import tkinter as tk
 from tkinter import font as tkfont
-from tkinter.messagebox import askokcancel
+from tkinter.messagebox import askokcancel, showwarning
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
 import geometry as G
@@ -151,8 +151,6 @@ class RegisterCash(Register):
             menu.add_cascade(label='Add', menu=add_menu)
             add_menu.add_command(label='Add exercise', command=lambda: None)
             menu.add_command(label='Delete exercise', command=self.delete_exer)
-            
-            # MethodType(_set_delete_command, menu)(self.delete_exer)
         self.bind("<Button-1>", self.on_click)
 
     def _rewind(self):
@@ -214,7 +212,9 @@ class RegisterCash(Register):
         elif self.selected_exer:
             ex = self.selected_exer
         else:
-            raise TypeError('Select exercise to delete')
+            showwarning(f'{__name__}.showwarning',
+                    f'Select exercise to delete', parent=self)
+            return
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
             # self.delete(ex.image_id)
