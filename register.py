@@ -156,6 +156,9 @@ class RegisterCash(Register):
                                  command=self.delete_exer)
         self.bind("<Button-1>", self.on_click)
 
+    def update_del_menu(self):
+        pass
+
     def _rewind(self):
         super()._rewind()
         self.exer_i = 0
@@ -257,3 +260,4 @@ class RegisterFrame(tk.Frame):
             saved_photos.append(ImageTk.PhotoImage(img))
             canvas.append(image=saved_photos[-1], name=name)
         canvas.configure(scrollregion = canvas.bbox("all"))
+        canvas.update_del_menu()
