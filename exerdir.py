@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from PIL import Image, ImageTk
-from typing import TypeDict, Callable
-from dataclasses import dataclass
+
+from typing import TypedDict, Callable, Optional
+from dataclasses import dataclass, field
+from itertools import dropwhile
 import re
+from PIL import Image, ImageTk
 
 
 @dataclass

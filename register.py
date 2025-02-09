@@ -5,9 +5,7 @@ import os
 # from collections import namedtuple
 from types import MethodType
 from dataclasses import dataclass, field
-from typing import Optional, Any, Callable, cast, TypedDict
-import re
-from itertools import dropwhile
+from typing import Optional, Any
 import copy
 import tkinter as tk
 from tkinter import font as tkfont
@@ -15,6 +13,7 @@ from tkinter.messagebox import askokcancel, showwarning
 from PIL import Image, ImageTk
 from scrolledcanvas import ScrolledCanvas
 import geometry as G
+import exerdir as ED
 
 saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
@@ -71,62 +70,6 @@ class Register(ScrolledCanvas):
         return image_id, name_id
 
 
-@dataclass
-class SelectRect:
-    # x0, y0, x1, y1, ...
-    coord: list[float] = field(default_factory=list)
-    # line_id = canv.create_line()
-    line_id: Optional[int] = None
-    # 'background', 'lightblue'
-    fill: Optional[str] = None
-
-
-@dataclass
-class ExerCash:
-    row: int                    # canvas row for exercise
-    image: ImageTk.PhotoImage
-    name: str                   # 'squat' or 'bench press'
-    image_id: int               # canvas image id (exer. pic)
-    name_id: int                # canvas text id (exer. name)
-    # highlighted rectangle around selected exercise
-    select_rect: SelectRect
-
-
-class FindArgs(TypedDict, total=False):
-    name: str
-    image_id: int
-    name_id: int
-
-
-class ExerDir(list[ExerCash]):
-    def find_exer(
-            self, *, name: str = '', image_id: int = 0, name_id: int = 0
-    ) -> ExerCash:
-        err: TypeError
-        predicate: Callable[[ExerCash], bool] = lambda exer: False
-        if name:
-            requested_name = name
-            if  (m := re.match('(?P<exer_name>.*) \(\d+\)', name)):
-                requested_name = m.group('exer_name')
-                predicate = lambda exer: exer.name != requested_name
-            err = TypeError(f'Exercise {requested_name} not found')
-        elif image_id or name_id:
-            predicate = lambda exer: (exer.image_id != image_id and
-                                      exer.name_id != name_id)
-            err = TypeError(f'Exercise with ' f'{image_id = } or {name_id = }'
-                            f' not found')
-        else:
-            raise TypeError('Specify name, image_id, or name_id')
-        try:
-            return next(dropwhile(predicate, self))
-        except StopIteration:
-            raise err
-
-    def delete_exer(self, exer_cash: ExerCash) -> None:
-        """Delete EXER_CASH from self"""
-        del self[self.index(exer_cash)]
-
-
 def _change_label(self, exer_name):
     """Change menu's item LABEL"""
 
@@ -144,7 +87,7 @@ class RegisterCash(Register):
         super().__init__(owner, **kwargs)
         self.exer_i = 0
         self.selected_exer: Optional[ExerCash] = None
-        self.exercises = ExerDir([])
+        self.exercises = ED.ExerDir([])
         if menu:
             self.menu = menu
             add_menu = tk.Menu(menu, tearoff=0)
@@ -163,7 +106,9 @@ class RegisterCash(Register):
         super()._rewind()
         self.exer_i = 0
 
-    def highlight_rect(self, exer_row: ExerCash, fill: Optional[str] = None):
+    def highlight_rect(
+            self, exer_row: ED.ExerCash, fill: Optional[str] = None
+    ) -> None:
         """highlight_rect(EX_ROW, fill='lightblue') - to highlight,
         highlight_rect(EX) - undo highlight"""
         
@@ -247,8 +192,8 @@ class RegisterCash(Register):
     def append(self, *, image=None, name=''):
         image_id, name_id = super().append(
             image=image, name=name, exer_id=self.exer_i)
-        self.exercises.append(ExerCash(
-            self.exer_i, image, name, image_id, name_id, SelectRect()))
+        self.exercises.append(ED.ExerCash(
+            self.exer_i, image, name, image_id, name_id, ED.SelectRect()))
         self.exer_i += 1
 
 class RegisterFrame(tk.Frame):
