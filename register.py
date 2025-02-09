@@ -130,19 +130,11 @@ class ExerDir(list[ExerCash]):
 def _change_label(self, exer_name):
     """Change menu's item LABEL"""
 
-    for item in range(self.index(tk.END)):
+    for item in range(self.index(tk.END) + 1):
         if self.entrycget(item, 'label').startswith('Delete exercise'):
             self.entryconfig(item, label=f'Delete exercise <{exer_name}>')
             return
-    raise TypeError('No "Delete exercise item" found')
-
-
-def _set_delete_command(self, del_cmd: Callable[[], None]):
-    for item in range(self.index(tk.END)):
-        if self.entrycget(item, 'label').startswith('Delete exercise'):
-            self.entryconfig(item, command=del_cmd)
-            return
-    raise TypeError('No "Delete exercise item" found')
+    raise TypeError('No "Delete exercise" item found')
 
 
 class RegisterCash(Register):
@@ -154,11 +146,12 @@ class RegisterCash(Register):
         self.selected_exer: Optional[ExerCash] = None
         self.exercises = ExerDir([])
         if menu:
-            menu.add_command(label='Delete exercise', command=lambda: None)
-            menu.add_command(label='Add exercise', command=lambda: None)
-            
-            MethodType(_set_delete_command, menu)(self.delete_exer)
             self.menu = menu
+            # menu.add_command(label='Delete exercise', command=lambda: None)
+            menu.add_command(label='Add exercise', command=lambda: None)
+            menu.add_command(label='Delete exercise', command=self.delete_exer)
+            
+            # MethodType(_set_delete_command, menu)(self.delete_exer)
         self.bind("<Button-1>", self.on_click)
 
     def _rewind(self):
