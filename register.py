@@ -147,8 +147,9 @@ class RegisterCash(Register):
         self.exercises = ExerDir([])
         if menu:
             self.menu = menu
-            # menu.add_command(label='Delete exercise', command=lambda: None)
-            menu.add_command(label='Add exercise', command=lambda: None)
+            add_menu = tk.Menu(menu, tearoff=0)
+            menu.add_cascade(label='Add', menu=add_menu)
+            add_menu.add_command(label='Add exercise', command=lambda: None)
             menu.add_command(label='Delete exercise', command=self.delete_exer)
             
             # MethodType(_set_delete_command, menu)(self.delete_exer)
