@@ -207,6 +207,8 @@ class RegisterCash(Register):
             MethodType(_change_label, self.menu)(ex.name)
 
     def delete_exer(self, exer_name: Optional[str] = None) -> None:
+        """Delete EXER_NAME or .selected_exer exercise"""
+        
         if exer_name:
             ex = self.exercises.find_exer(name=exer_name)
         elif self.selected_exer:
