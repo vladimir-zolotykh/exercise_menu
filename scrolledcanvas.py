@@ -25,5 +25,13 @@ class ScrolledCanvas(tk.Canvas):
             attr = getattr(box, meth)
             if meth.startswith('grid') and callable(attr):
                 setattr(self, meth, attr)
+        self.bind_all("<Button-4>", self._on_mousewheel_up)
+        self.bind_all("<Button-5>", self._on_mousewheel_down)
+
+    def _on_mousewheel_up(self, event):
+        self.yview_scroll(-1, tk.UNITS)
+
+    def _on_mousewheel_down(self, event):
+        self.yview_scroll(1, tk.UNITS)
         
                       
