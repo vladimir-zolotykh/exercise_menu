@@ -92,12 +92,24 @@ class RegisterCash(Register):
             self.menu = menu
             add_menu = tk.Menu(menu, tearoff=0)
             menu.add_cascade(label='Add', menu=add_menu)
-            add_menu.add_command(label='Add exercise', command=lambda: None)
+            # add_menu.add_command(label='Add exercise', command=lambda: None)
+            self.update_add_menu(add_menu)
             del_menu = tk.Menu(menu, tearoff=0)
             menu.add_cascade(label='Del', menu=del_menu)
             del_menu.add_command(label='Delete exercise',
                                  command=self.delete_exer)
         self.bind("<Button-1>", self.on_click)
+
+    def update_add_menu(self, menu: tk.Menu) -> None:
+        n: Optional[int] = menu.index(tk.END)
+        if isinstance(n, int):
+            # Delete existent entries
+            for i in range(n + 1, 1, -1):
+                menu.delete(i)
+        for name, img in dirx.items():
+            menu.add_command(
+                label=name,
+                command=(lambda n=name, im=img: self.append(im, n)))
 
     def update_del_menu(self):
         pass
