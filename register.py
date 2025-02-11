@@ -5,7 +5,7 @@ import os
 # from collections import namedtuple
 from types import MethodType
 from dataclasses import dataclass, field
-from typing import Optional, Any
+from typing import Optional, Any, cast, Callable
 import copy
 import tkinter as tk
 from tkinter import font as tkfont
@@ -86,7 +86,7 @@ class RegisterCash(Register):
     ):
         super().__init__(owner, **kwargs)
         self.exer_i = 0
-        self.selected_exer: Optional[ExerCash] = None
+        self.selected_exer: Optional[ED.ExerCash] = None
         self.exercises = ED.ExerDir([])
         if menu:
             self.menu = menu
@@ -101,15 +101,22 @@ class RegisterCash(Register):
         self.bind("<Button-1>", self.on_click)
 
     def update_add_menu(self, menu: tk.Menu) -> None:
+        def make_append(
+                name: str, image: ImageTk.PhotoImage
+        ) -> Callable[[], None]:
+            def _call_method():
+                return self.append(image=image, name=name)
+            return _call_method
+
         n: Optional[int] = menu.index(tk.END)
         if isinstance(n, int):
             # Delete existent entries
             for i in range(n + 1, 1, -1):
                 menu.delete(i)
         for name, img in dirx.items():
-            menu.add_command(
-                label=name,
-                command=(lambda n=name, im=img: self.append(im, n)))
+            menu.add_command(label=name,
+                             command=make_append(
+                                 name, cast(ImageTk.PhotoImage, img)))
 
     def update_del_menu(self):
         pass
@@ -150,9 +157,9 @@ class RegisterCash(Register):
         if self.selected_exer:  # undo selected rect
             # self.draw_rect(row=self.selected_exer.row)
             self.highlight_rect(self.selected_exer)
-        ex: ExerCash
+        ex: ED.ExerCash
         # kw: dict[str, int] = {}
-        kw: FindArgs = {}
+        kw: ED.FindArgs = {}
         if typ == 'image':
             kw['image_id'] = item[0]
         elif typ == 'text':
@@ -192,9 +199,9 @@ class RegisterCash(Register):
         self.delete('all')
         # super()._rewind()
         self._rewind()
-        exer_dir_copy: list[ExerCash] = copy.copy(self.exercises)
+        exer_dir_copy: list[ED.ExerCash] = copy.copy(self.exercises)
         # for exer_cash in self.exercises:
-        self.exercises = ExerDir()
+        self.exercises = ED.ExerDir()
         for exer_cash in exer_dir_copy:
             self.append(image=exer_cash.image, name=exer_cash.name)
         del exer_dir_copy
