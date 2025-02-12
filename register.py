@@ -23,8 +23,7 @@ DirX = dict[str, Image_mod.Image]
 try:
     dirx: DirX = {
         # Revealed type is "PIL.Image.Image"
-        name: cast(Image_mod.Image,
-                   Image_mod.open(path).resize(G.IMAGE))
+        name: Image_mod.open(path).resize(G.IMAGE)
         for name, path in zip(
                 EXER_LIST,
                 (os.path.expanduser(f'~/Downloads/{xn.replace(" ", "_")}.jpg')
