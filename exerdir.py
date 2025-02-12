@@ -36,7 +36,6 @@ class FindArgs(TypedDict, total=False):
     name_id: int
 
 
-
 class ExerDir(list[ExerCash]):
     def find_exer(
             self, *, name: str = '', image_id: int = 0, name_id: int = 0
