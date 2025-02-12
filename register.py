@@ -92,16 +92,23 @@ class RegisterCash(Register):
         self.exer_i = 0
         self.selected_exer: Optional[ED.ExerCash] = None
         self.exercises = ED.ExerDir([])
-        if menu:
-            self.menu = menu
-            add_menu = tk.Menu(menu, tearoff=0)
-            menu.add_cascade(label='Add', menu=add_menu)
-            # add_menu.add_command(label='Add exercise', command=lambda: None)
-            self.update_add_menu(add_menu)
-            del_menu = tk.Menu(menu, tearoff=0)
-            menu.add_cascade(label='Del', menu=del_menu)
-            del_menu.add_command(label='Delete exercise',
+        assert menu
+        # if menu:
+        self.menu = menu
+        add_menu = tk.Menu(menu, tearoff=0)
+        menu.add_cascade(label='Add', menu=add_menu)
+        del_menu = tk.Menu(menu, tearoff=0)
+        self.update_del_menu(del_menu)
+        menu.add_cascade(label='Del', menu=del_menu)
+        del_menu.add_command(label='Delete exercise',
                                  command=self.delete_exer)
+        for name, img in dirx.items():
+            saved_photos.append(ImageTk.PhotoImage(img))
+            self.append(image=saved_photos[-1], name=name)
+        self.update_add_menu(add_menu)
+        self.update_del_menu(del_menu)
+        self.configure(scrollregion = self.bbox("all"))
+
         self.bind("<Button-1>", self.on_click)
 
     def update_add_menu(self, menu: tk.Menu) -> None:
@@ -122,8 +129,15 @@ class RegisterCash(Register):
                              command=make_append(
                                  exer_cash.name, image=exer_cash.image))
 
-    def update_del_menu(self):
-        pass
+    def update_del_menu(self, menu: tk.Menu) -> None:
+        def make_delete_cmd(name: str) -> Callable[[], None]:
+            def _call_method():
+                return self.delete_exer(name)
+            return _call_method
+
+        for exer_cash in self.exercises:
+            menu.add_command(label=exer_cash.name,
+                             command=make_delete_cmd(exer_cash.name))
 
     def _rewind(self):
         super()._rewind()
@@ -224,8 +238,10 @@ class RegisterFrame(tk.Frame):
         super().__init__(owner)
         canvas = RegisterCash(self, menu=menu)
         canvas.grid(column=0, row=0, sticky=tk.NSEW)
-        for name, img in dirx.items():
-            saved_photos.append(ImageTk.PhotoImage(img))
-            canvas.append(image=saved_photos[-1], name=name)
-        canvas.configure(scrollregion = canvas.bbox("all"))
-        canvas.update_del_menu()
+        # for name, img in dirx.items():
+        #     saved_photos.append(ImageTk.PhotoImage(img))
+        #     canvas.append(image=saved_photos[-1], name=name)
+        # canvas.update_add_menu(menu)
+        # canvas.update_del_menu(menu)
+        # canvas.configure(scrollregion = canvas.bbox("all"))
+ 
