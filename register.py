@@ -5,7 +5,7 @@ import os
 # from collections import namedtuple
 from types import MethodType
 from dataclasses import dataclass, field
-from typing import Optional, Any, cast, Callable, TypedDict
+from typing import Optional, Any, cast, Callable, Union
 import copy
 import tkinter as tk
 from tkinter import font as tkfont
@@ -19,7 +19,7 @@ import exerdir as ED
 saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
              "overhead press","biceps curl", "back plank")
-DirX = dict[str, Image_mod.Image]
+DirX = dict[str, Union[Image_mod.Image, ImageTk.PhotoImage]]
 try:
     dirx: DirX = {
         # Revealed type is "PIL.Image.Image"
@@ -51,7 +51,9 @@ class Register(ScrolledCanvas):
             return 0 + G.BORDER.width, row * G.ROW_HEIGHT + G.BORDER.height
 
 
-    def append(self, *, image=None, name='', exer_id=0) -> tuple[int, int]:
+    def append(
+            self, *, image: ImageTk.PhotoImage, name='', exer_id=0
+    ) -> tuple[int, int]:
         ex_str = f'{name} ({exer_id})'
         # self.toggle_selection_rect()
         x0, y0 = self._get_xy(self._row)
@@ -116,9 +118,8 @@ class RegisterCash(Register):
             for i in range(n + 1, 1, -1):
                 menu.delete(i)
         for name, img in dirx.items():
-            menu.add_command(label=name,
-                             command=make_append(
-                                 name, cast(ImageTk.PhotoImage, img)))
+            assert isinstance(img, ImageTk.PhotoImage)
+            menu.add_command(label=name, command=make_append(name, img))
 
     def update_del_menu(self):
         pass
@@ -210,7 +211,7 @@ class RegisterCash(Register):
         self.configure(scrollregion = self.bbox("all"))
             
 
-    def append(self, *, image=None, name=''):
+    def append(self, *, image=ImageTk.PhotoImage, name=''):
         image_id, name_id = super().append(
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
