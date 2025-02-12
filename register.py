@@ -117,9 +117,10 @@ class RegisterCash(Register):
             # Delete existent entries
             for i in range(n + 1, 1, -1):
                 menu.delete(i)
-        for name, img in dirx.items():
-            assert isinstance(img, ImageTk.PhotoImage)
-            menu.add_command(label=name, command=make_append(name, img))
+        for exer_cash in self.exercises:
+            menu.add_command(label=exer_cash.name,
+                             command=make_append(
+                                 exer_cash.name, image=exer_cash.image))
 
     def update_del_menu(self):
         pass
