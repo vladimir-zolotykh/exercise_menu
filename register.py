@@ -5,12 +5,13 @@ import os
 # from collections import namedtuple
 from types import MethodType
 from dataclasses import dataclass, field
-from typing import Optional, Any, cast, Callable
+from typing import Optional, Any, cast, Callable, TypedDict
 import copy
 import tkinter as tk
 from tkinter import font as tkfont
 from tkinter.messagebox import askokcancel, showwarning
-from PIL import Image, ImageTk
+from PIL import Image as Image_mod
+from PIL import ImageTk
 from scrolledcanvas import ScrolledCanvas
 import geometry as G
 import exerdir as ED
@@ -18,10 +19,12 @@ import exerdir as ED
 saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
              "overhead press","biceps curl", "back plank")
-dirx = {}
+DirX = dict[str, Image_mod.Image]
 try:
-    dirx = {
-        name: Image.open(path).resize(G.IMAGE)
+    dirx: DirX = {
+        # Revealed type is "PIL.Image.Image"
+        name: cast(Image_mod.Image,
+                   Image_mod.open(path).resize(G.IMAGE))
         for name, path in zip(
                 EXER_LIST,
                 (os.path.expanduser(f'~/Downloads/{xn.replace(" ", "_")}.jpg')
