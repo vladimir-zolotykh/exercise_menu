@@ -100,8 +100,6 @@ class RegisterCash(Register):
         del_menu = tk.Menu(menu, tearoff=0)
         self.update_del_menu(del_menu)
         menu.add_cascade(label='Del', menu=del_menu)
-        del_menu.add_command(label='Delete exercise',
-                                 command=self.delete_exer)
         for name, img in dirx.items():
             saved_photos.append(ImageTk.PhotoImage(img))
             self.append(image=saved_photos[-1], name=name)
