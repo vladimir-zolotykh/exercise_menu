@@ -46,7 +46,7 @@ class ExerDir(list[ExerCash]):
             requested_name = name
             if  (m := re.match('(?P<exer_name>.*) \(\d+\)', name)):
                 requested_name = m.group('exer_name')
-                predicate = lambda exer: exer.name != requested_name
+                predicate = lambda exer: exer.name == requested_name
             err = TypeError(f'Exercise {requested_name} not found')
         elif image_id or name_id:
             predicate = lambda exer: (exer.image_id != image_id and

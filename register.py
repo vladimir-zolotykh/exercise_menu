@@ -189,9 +189,9 @@ class RegisterCash(Register):
             self.selected_exer = ex
         # self.draw_rect(row=ex.row, fill='lightblue')
         self.highlight_rect(ex, fill='lightblue')
-        if self.menu:
-            MethodType(_change_label, self.menu)(ex.name)
-
+        # if self.menu:
+        #     MethodType(_change_label, self.menu)(ex.name)
+        
     def delete_exer(self, exer_name: Optional[str] = None) -> None:
         """Delete EXER_NAME or .selected_exer exercise"""
         
