@@ -28,6 +28,7 @@ class ExerCash:
     name_id: int                # canvas text id (exer. name)
     # highlighted rectangle around selected exercise
     select_rect: SelectRect
+    menu_visible: bool
 
 
 class FindArgs(TypedDict, total=False):

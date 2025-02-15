@@ -124,9 +124,10 @@ class RegisterCash(Register):
             for i in range(n + 1, 1, -1):
                 menu.delete(i)
         for exer_cash in self.exercises:
-            menu.add_command(label=exer_cash.name,
-                             command=make_append(
-                                 exer_cash.name, image=exer_cash.image))
+            if not exer_cash.menu_visible:
+                menu.add_command(label=exer_cash.name,
+                                 command=make_append(
+                                     exer_cash.name, image=exer_cash.image))
 
     def update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
@@ -135,8 +136,9 @@ class RegisterCash(Register):
             return _call_method
 
         for exer_cash in self.exercises:
-            menu.add_command(label=exer_cash.name,
-                             command=make_delete_cmd(exer_cash.name))
+            if exer_cash.menu_visible:
+                menu.add_command(label=exer_cash.name,
+                                 command=make_delete_cmd(exer_cash.name))
 
     def _rewind(self):
         super()._rewind()
@@ -206,8 +208,7 @@ class RegisterCash(Register):
             return
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
-            # self.delete(ex.image_id)
-            # self.delete(ex.name_id)
+            ex.menu_visible = False
             self.exercises.delete_exer(ex)
             self.refresh()
 
@@ -229,7 +230,8 @@ class RegisterCash(Register):
         image_id, name_id = super().append(
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
-            self.exer_i, image, name, image_id, name_id, ED.SelectRect()))
+            self.exer_i, image, name, image_id, name_id,
+            ED.SelectRect(), True))
         self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 
