@@ -101,7 +101,8 @@ class RegisterCash(Register):
         self.update_del_menu(del_menu)
         menu.add_cascade(label='Del', menu=del_menu)
         for name, img in dirx.items():
-            saved_photos.append(ImageTk.PhotoImage(img))
+            saved_photos.append(img if isinstance(img, ImageTk.PhotoImage) else
+                                ImageTk.PhotoImage(img))
             self.append(image=saved_photos[-1], name=name)
         self.update_add_menu(add_menu)
         self.update_del_menu(del_menu)
@@ -130,7 +131,7 @@ class RegisterCash(Register):
     def update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
             def _call_method():
-                return self.delete_exer(name)
+                self.delete_exer(name)
             return _call_method
 
         for exer_cash in self.exercises:
