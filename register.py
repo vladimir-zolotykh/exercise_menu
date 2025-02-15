@@ -229,6 +229,7 @@ class RegisterCash(Register):
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
             self.exer_i, image, name, image_id, name_id, ED.SelectRect()))
+        self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 
 class RegisterFrame(tk.Frame):
