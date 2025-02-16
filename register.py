@@ -222,7 +222,8 @@ class RegisterCash(Register):
         # for exer_cash in self.exercises:
         self.exercises = ED.ExerDir()
         for exer_cash in exer_dir_copy:
-            self.append(image=exer_cash.image, name=exer_cash.name)
+            if exer_cash.menu_visible:
+                self.append(image=exer_cash.image, name=exer_cash.name)
         del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
             
