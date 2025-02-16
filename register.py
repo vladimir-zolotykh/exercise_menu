@@ -95,9 +95,9 @@ class RegisterCash(Register):
         assert menu
         # if menu:
         self.menu = menu
-        add_menu = tk.Menu(menu, tearoff=0)
+        self.add_menu = add_menu = tk.Menu(menu, tearoff=0)
         menu.add_cascade(label='Add', menu=add_menu)
-        del_menu = tk.Menu(menu, tearoff=0)
+        self.del_menu = del_menu = tk.Menu(menu, tearoff=0)
         self.update_del_menu(del_menu)
         menu.add_cascade(label='Del', menu=del_menu)
         for name, img in dirx.items():
@@ -209,6 +209,7 @@ class RegisterCash(Register):
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
             ex.menu_visible = False
+            self.update_add_menu(self.add_menu)
             self.exercises.delete_exer(ex)
             self.refresh()
 

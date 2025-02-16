@@ -63,4 +63,5 @@ class ExerDir(list[ExerCash]):
 
     def delete_exer(self, exer_cash: ExerCash) -> None:
         """Delete EXER_CASH from self"""
+        print(f'{exer_cash = }')
         del self[self.index(exer_cash)]
