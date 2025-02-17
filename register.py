@@ -128,6 +128,7 @@ class RegisterCash(Register):
                 menu.add_command(label=exer_cash.name,
                                  command=make_append(
                                      exer_cash.name, image=exer_cash.image))
+                exer_cash.menu_visible = False
 
     def update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
@@ -135,6 +136,11 @@ class RegisterCash(Register):
                 self.delete_exer(name)
             return _call_method
 
+        n: Optional[int] = menu.index(tk.END)
+        if isinstance(n, int):
+            # Delete existent entries
+            for i in range(n + 1, 1, -1):
+                menu.delete(i)
         for exer_cash in self.exercises:
             if exer_cash.menu_visible:
                 menu.add_command(label=exer_cash.name,
