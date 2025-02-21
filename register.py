@@ -128,10 +128,11 @@ class RegisterCash(Register):
                 menu.delete(i)
         for exer_cash in self.exercises:
             if not exer_cash.menu_visible:
-                menu.add_command(label=exer_cash.name,
-                                 command=make_append(
-                                     exer_cash.name, image=exer_cash.image))
-                exer_cash.menu_visible = False
+                if (im := exer_cash.image):
+                    menu.add_command(
+                        label=exer_cash.name,
+                        command=make_append(exer_cash.name, image=im))
+                    exer_cash.menu_visible = False
 
     def update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
@@ -241,7 +242,7 @@ class RegisterCash(Register):
         image_id, name_id = super().append(
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
-            self.exer_i, image, name, image_id, name_id, True))
+            self.exer_i, name, image, image_id, name_id, True))
         self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 

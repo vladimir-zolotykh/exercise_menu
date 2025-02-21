@@ -25,11 +25,11 @@ select_rect: SelectRect = SelectRect()
 @dataclass
 class ExerCash:
     row: int                    # canvas row for exercise
-    image: ImageTk.PhotoImage
     name: str                   # 'squat' or 'bench press'
-    image_id: int               # canvas image id (exer. pic)
-    name_id: int                # canvas text id (exer. name)
-    menu_visible: bool
+    image: ImageTk.PhotoImage | None = None
+    image_id: int | None = None # canvas image id (exer. pic)
+    name_id: int | None = None  # canvas text id (exer. name)
+    menu_visible: bool = False
 
 
 class FindArgs(TypedDict, total=False):
