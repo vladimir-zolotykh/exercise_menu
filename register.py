@@ -100,15 +100,18 @@ class RegisterCash(Register):
         self.del_menu = del_menu = tk.Menu(menu, tearoff=0)
         self.update_del_menu(del_menu)
         menu.add_cascade(label='Del', menu=del_menu)
-        for name, img in dirx.items():
-            saved_photos.append(img if isinstance(img, ImageTk.PhotoImage) else
-                                ImageTk.PhotoImage(img))
-            self.append(image=saved_photos[-1], name=name)
+        self.initialize_exercises()
         self.update_add_menu(add_menu)
         self.update_del_menu(del_menu)
         self.configure(scrollregion = self.bbox("all"))
 
         self.bind("<Button-1>", self.on_click)
+
+    def initialize_exercises(self):
+        for name, img in dirx.items():
+            saved_photos.append(img if isinstance(img, ImageTk.PhotoImage) else
+                                ImageTk.PhotoImage(img))
+            self.append(image=saved_photos[-1], name=name)
 
     def update_add_menu(self, menu: tk.Menu) -> None:
         def make_append(
@@ -248,10 +251,4 @@ class RegisterFrame(tk.Frame):
         super().__init__(owner)
         canvas = RegisterCash(self, menu=menu)
         canvas.grid(column=0, row=0, sticky=tk.NSEW)
-        # for name, img in dirx.items():
-        #     saved_photos.append(ImageTk.PhotoImage(img))
-        #     canvas.append(image=saved_photos[-1], name=name)
-        # canvas.update_add_menu(menu)
-        # canvas.update_del_menu(menu)
-        # canvas.configure(scrollregion = canvas.bbox("all"))
  
