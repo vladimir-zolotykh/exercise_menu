@@ -241,10 +241,12 @@ class RegisterCash(Register):
             
 
     def add_to_cashed_exercises(
-            self, *, image: ImageTk.PhotoImage, name: str
+            self, *, image: ImageTk.PhotoImage, name: str,
+            image_id: Optional[int] = None, name_id: Optional[int] = None
     ):
-        image_id, name_id = super().add_to_canvas(
-            image=image, name=name, exer_id=self.exer_i)
+        if image_id is None or name_id is None:
+            image_id, name_id = super().add_to_canvas(
+                image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
             self.exer_i, name, image, image_id, name_id, True))
         self.configure(scrollregion = self.bbox("all"))
