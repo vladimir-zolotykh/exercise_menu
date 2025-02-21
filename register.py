@@ -51,7 +51,7 @@ class Register(ScrolledCanvas):
             return 0 + G.BORDER.width, row * G.ROW_HEIGHT + G.BORDER.height
 
 
-    def append(
+    def add_to_canvas(
             self, *, image: ImageTk.PhotoImage, name='', exer_id=0
     ) -> tuple[int, int]:
         ex_str = f'{name} ({exer_id})'
@@ -239,7 +239,7 @@ class RegisterCash(Register):
             
 
     def append(self, *, image=ImageTk.PhotoImage, name=''):
-        image_id, name_id = super().append(
+        image_id, name_id = super().add_to_canvas(
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
             self.exer_i, name, image, image_id, name_id, True))
