@@ -111,7 +111,7 @@ class RegisterCash(Register):
         for name, img in dirx.items():
             saved_photos.append(img if isinstance(img, ImageTk.PhotoImage) else
                                 ImageTk.PhotoImage(img))
-            self.append(image=saved_photos[-1], name=name)
+            self.add_to_cashed_exercises(image=saved_photos[-1], name=name)
 
     def update_add_menu(self, menu: tk.Menu) -> None:
         def make_append(
@@ -233,12 +233,15 @@ class RegisterCash(Register):
         self.exercises = ED.ExerDir()
         for exer_cash in exer_dir_copy:
             if exer_cash.menu_visible:
-                self.append(image=exer_cash.image, name=exer_cash.name)
+                self.add_to_cashed_exercises(
+                    image=exer_cash.image, name=exer_cash.name)
         del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
             
 
-    def append(self, *, image=ImageTk.PhotoImage, name=''):
+    def add_to_cashed_exercises(
+            self, *, image=ImageTk.PhotoImage, name=''
+    ):
         image_id, name_id = super().add_to_canvas(
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
