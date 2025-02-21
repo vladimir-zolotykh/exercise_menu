@@ -137,7 +137,7 @@ class RegisterCash(Register):
     def update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
             def _call_method():
-                self.delete_exer(name)
+                self.remove_from_canvas(name)
             return _call_method
 
         n: Optional[int] = menu.index(tk.END)
@@ -205,8 +205,8 @@ class RegisterCash(Register):
         # if self.menu:
         #     MethodType(_change_label, self.menu)(ex.name)
 
-    def delete_exer(self, exer_name: Optional[str] = None) -> None:
-        """Delete EXER_NAME or .selected_exer exercise"""
+    def remove_from_canvas(self, exer_name: Optional[str] = None) -> None:
+        """Remove EXER_NAME from canvas"""
         
         if exer_name:
             ex = self.exercises.find_exer(name=exer_name)
@@ -220,7 +220,7 @@ class RegisterCash(Register):
                        f'Delete exercise {ex.name}? ', parent=self):
             ex.visible_in_canvas = False
             self.update_add_menu(self.add_menu)
-            self.exercises.delete_exer(ex)
+            self.exercises.hide_in_exercises(ex)
             self.refresh()
 
     def refresh(self) -> None:

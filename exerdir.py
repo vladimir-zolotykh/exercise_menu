@@ -62,7 +62,7 @@ class ExerDir(list[ExerCash]):
         except StopIteration:
             raise err
 
-    def delete_exer(self, exer_cash: ExerCash) -> None:
+    def hide_in_exercises(self, exer_cash: ExerCash) -> None:
         """Delete EXER_CASH from self"""
         # del self[self.index(exer_cash)]
         exer_cash.visible_in_canvas = False
