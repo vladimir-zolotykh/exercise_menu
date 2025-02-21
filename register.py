@@ -159,9 +159,9 @@ class RegisterCash(Register):
         """highlight_rect(EX_ROW, fill='lightblue') - to highlight,
         highlight_rect(EX) - undo highlight"""
         
-        if fill is None and isinstance(exer_row.select_rect.line_id, int):
-            line_id = exer_row.select_rect.line_id
-            exer_row.select_rect.line_id = None
+        if fill is None and isinstance(ED.select_rect.line_id, int):
+            line_id = ED.select_rect.line_id
+            ED.select_rect.line_id = None
             self.delete(line_id)
             return
         row = exer_row.row
@@ -170,9 +170,9 @@ class RegisterCash(Register):
               G.TEXT_WIDTH)
         y1 = y0 + G.BORDER.height + G.IMAGE.height
         coord = list(map(float, (x0, y0, x1, y0, x1, y1, x0, y1)))
-        exer_row.select_rect.coord = coord
-        exer_row.select_rect.fill = fill
-        exer_row.select_rect.line_id = self.create_line(
+        ED.select_rect.coord = coord
+        ED.select_rect.fill = fill
+        ED.select_rect.line_id = self.create_line(
             *coord, width=2, fill=cast(str, fill))
 
 
@@ -241,8 +241,7 @@ class RegisterCash(Register):
         image_id, name_id = super().append(
             image=image, name=name, exer_id=self.exer_i)
         self.exercises.append(ED.ExerCash(
-            self.exer_i, image, name, image_id, name_id,
-            ED.SelectRect(), True))
+            self.exer_i, image, name, image_id, name_id, True))
         self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 

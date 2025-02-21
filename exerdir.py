@@ -18,6 +18,9 @@ class SelectRect:
     # 'background', 'lightblue'
     fill: Optional[str] = None
 
+# highlighted rectangle around selected exercise
+select_rect: SelectRect = SelectRect()
+
 
 @dataclass
 class ExerCash:
@@ -26,8 +29,6 @@ class ExerCash:
     name: str                   # 'squat' or 'bench press'
     image_id: int               # canvas image id (exer. pic)
     name_id: int                # canvas text id (exer. name)
-    # highlighted rectangle around selected exercise
-    select_rect: SelectRect
     menu_visible: bool
 
 
