@@ -118,7 +118,7 @@ class RegisterCash(Register):
                 name: str, image: ImageTk.PhotoImage
         ) -> Callable[[], None]:
             def _call_method():
-                return self.append(image=image, name=name)
+                return self.add_to_cashed_exercises(image=image, name=name)
             return _call_method
 
         n: Optional[int] = menu.index(tk.END)
@@ -233,14 +233,15 @@ class RegisterCash(Register):
         self.exercises = ED.ExerDir()
         for exer_cash in exer_dir_copy:
             if exer_cash.menu_visible:
-                self.add_to_cashed_exercises(
-                    image=exer_cash.image, name=exer_cash.name)
+                assert exer_cash.image
+                im: ImageTk.PhotoImage = exer_cash.image
+                self.add_to_cashed_exercises(image=im, name=exer_cash.name)
         del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
             
 
     def add_to_cashed_exercises(
-            self, *, image=ImageTk.PhotoImage, name=''
+            self, *, image: ImageTk.PhotoImage, name: str
     ):
         image_id, name_id = super().add_to_canvas(
             image=image, name=name, exer_id=self.exer_i)
