@@ -127,12 +127,12 @@ class RegisterCash(Register):
             for i in range(n + 1, 1, -1):
                 menu.delete(i)
         for exer_cash in self.exercises:
-            if not exer_cash.visible_in_canvas:
+            if not exer_cash.visible:
                 if (im := exer_cash.image):
                     menu.add_command(
                         label=exer_cash.name,
                         command=make_append(exer_cash.name, image=im))
-                    exer_cash.visible_in_canvas = False
+                    exer_cash.visible = False
 
     def update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
@@ -146,7 +146,7 @@ class RegisterCash(Register):
             for i in range(n + 1, 1, -1):
                 menu.delete(i)
         for exer_cash in self.exercises:
-            if exer_cash.visible_in_canvas:
+            if exer_cash.visible:
                 menu.add_command(label=exer_cash.name,
                                  command=make_delete_cmd(exer_cash.name))
 
@@ -218,7 +218,7 @@ class RegisterCash(Register):
             return
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
-            ex.visible_in_canvas = False
+            ex.visible = False
             self.update_add_menu(self.add_menu)
             self.exercises.hide_in_exercises(ex)
             self.refresh()
@@ -231,7 +231,7 @@ class RegisterCash(Register):
         # for exer_cash in self.exercises:
         self.exercises = ED.ExerDir()
         for exer_cash in exer_dir_copy:
-            if exer_cash.visible_in_canvas:
+            if exer_cash.visible:
                 assert exer_cash.image
                 im: ImageTk.PhotoImage = exer_cash.image
                 self.add_to_cashed_exercises(image=im, name=exer_cash.name)

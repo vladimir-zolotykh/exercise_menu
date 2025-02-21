@@ -29,7 +29,7 @@ class ExerCash:
     image: ImageTk.PhotoImage | None = None
     image_id: int | None = None # canvas image id (exer. pic)
     name_id: int | None = None  # canvas text id (exer. name)
-    visible_in_canvas: bool = False
+    visible: bool = False
 
 
 class FindArgs(TypedDict, total=False):
@@ -65,4 +65,4 @@ class ExerDir(list[ExerCash]):
     def hide_in_exercises(self, exer_cash: ExerCash) -> None:
         """Delete EXER_CASH from self"""
         # del self[self.index(exer_cash)]
-        exer_cash.visible_in_canvas = False
+        exer_cash.visible = False
