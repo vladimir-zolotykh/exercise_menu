@@ -223,7 +223,6 @@ class RegisterCash(Register):
             self.exercises.delete_exer(ex)
             self.refresh()
 
-
     def refresh(self) -> None:
         self.delete('all')
         # super()._rewind()
@@ -238,7 +237,6 @@ class RegisterCash(Register):
                 self.add_to_cashed_exercises(image=im, name=exer_cash.name)
         del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
-            
 
     def add_to_cashed_exercises(
             self, *, image: ImageTk.PhotoImage, name: str,
