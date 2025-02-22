@@ -218,9 +218,8 @@ class RegisterCash(Register):
             return
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
-            ex.visible = False
-            self.update_add_menu(self.add_menu)
             self.exercises.hide_in_exercises(ex)
+            self.update_add_menu(self.add_menu)
             self.refresh()
 
     def refresh(self) -> None:
