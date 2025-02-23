@@ -97,8 +97,7 @@ class RegisterCash(Register):
         self.menu = menu
         self.add_menu = add_menu = tk.Menu(menu, tearoff=0)
         menu.add_cascade(label='Add', menu=add_menu)
-        self.del_menu = del_menu = tk.Menu(menu, tearoff=0)
-        self.update_del_menu(del_menu)
+        self.del_menu = del_menu = tk.Menu(menu, name='del_menu', tearoff=0)
         menu.add_cascade(label='Del', menu=del_menu)
         self.initialize_exercises()
         self.update_add_menu(add_menu)
@@ -141,14 +140,19 @@ class RegisterCash(Register):
             return _call_method
 
         n: Optional[int] = menu.index(tk.END)
-        if isinstance(n, int):
-            # Delete existent entries
-            for i in range(n + 1, 1, -1):
-                menu.delete(i)
+        print(f'* {menu.winfo_name() = }, {n = }')
+        menu.delete(0, 'end')
+        # if isinstance(n, int):
+        #     # Delete existent entries
+        #     # for i in range(n + 1, 1, -1):
+        #     for i in range(n):
+        #         print(f'{i = }')
+        #         menu.delete(i)
         for exer_cash in self.exercises:
             if exer_cash.visible:
                 menu.add_command(label=exer_cash.name,
                                  command=make_delete_cmd(exer_cash.name))
+        print(f'** {menu.winfo_name() = }, {menu.index(tk.END) = }')
 
     def _rewind(self):
         super()._rewind()
@@ -220,6 +224,7 @@ class RegisterCash(Register):
                        f'Delete exercise {ex.name}? ', parent=self):
             self.exercises.hide_in_exercises(ex)
             self.update_add_menu(self.add_menu)
+            self.update_del_menu(self.del_menu)
             self.refresh()
 
     def refresh(self) -> None:
