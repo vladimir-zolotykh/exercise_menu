@@ -121,10 +121,7 @@ class RegisterCash(Register):
             return _call_method
 
         n: Optional[int] = menu.index(tk.END)
-        if isinstance(n, int):
-            # Delete existent entries
-            for i in range(n + 1, 1, -1):
-                menu.delete(i)
+        menu.delete(0, tk.END)
         for exer_cash in self.exercises:
             if not exer_cash.visible:
                 if (im := exer_cash.image):
