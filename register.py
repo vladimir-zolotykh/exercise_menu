@@ -5,7 +5,7 @@ import os
 # from collections import namedtuple
 from types import MethodType
 from dataclasses import dataclass, field
-from typing import Optional, Any, cast, Callable, Union
+from typing import Optional, Any, cast, Callable, Union, Generator
 import copy
 import tkinter as tk
 from tkinter import font as tkfont
@@ -140,19 +140,18 @@ class RegisterCash(Register):
             return _call_method
 
         n: Optional[int] = menu.index(tk.END)
-        print(f'* {menu.winfo_name() = }, {n = }')
-        menu.delete(0, 'end')
-        # if isinstance(n, int):
-        #     # Delete existent entries
-        #     # for i in range(n + 1, 1, -1):
-        #     for i in range(n):
-        #         print(f'{i = }')
-        #         menu.delete(i)
+        # menu.delete(0, 'end')
+
+        def backward(n: int) -> range:
+            return range(n - 1, -1, -1)
+
+        if (z := menu.index(tk.END)):
+            for i in backward(z + 1):
+                menu.delete(i)
         for exer_cash in self.exercises:
             if exer_cash.visible:
                 menu.add_command(label=exer_cash.name,
                                  command=make_delete_cmd(exer_cash.name))
-        print(f'** {menu.winfo_name() = }, {menu.index(tk.END) = }')
 
     def _rewind(self):
         super()._rewind()
