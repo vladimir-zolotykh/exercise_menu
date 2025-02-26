@@ -11,9 +11,9 @@ saved_photos: list[ImageTk.PhotoImage] = []
 
 @dataclass
 class Row3:
-    row: int | None = None
-    image_id: int | None = None
-    name_id: int | None = None
+    row: int | None
+    image_id: int | None
+    name_id: int | None
 
 
 @dataclass
@@ -21,18 +21,15 @@ class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
-    # `visible' False means that the fields below are all not set
-    row: int | None = None      # canvas row for the lift
-    image_id: int | None = None # canvas's image id
-    name_id: int | None = None  # canvas's text id
+    row: Row3 = Row3(None, None, None)
 
     def hide(self):
         self.visible = False
-        self.row = self.image_id = self.name_id = None
+        self.row3 = Row3(None, None, None)
 
-    def show(self, row, image_id, name_id):
+    def show(self, row3: Row3):
         self.visible = True
-        self.row, self.image_id, self.name_id = (row, image_id, name_id)
+        self.row3 = row3
     
 
 class Lifts(dict[str, Lift]):
@@ -51,7 +48,7 @@ class Lifts(dict[str, Lift]):
         lift = self[name]
         lift.hide()
 
-    def show(self, name: str, row, image_id, name_id):
+    def show(self, name: str, row3: Row3):
         lift = self[name]
-        lift.show(row, image_id, name_id)
+        lift.show(row3)
 
