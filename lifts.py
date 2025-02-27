@@ -11,9 +11,9 @@ saved_photos: list[ImageTk.PhotoImage] = []
 
 @dataclass
 class Row3:
-    row: int | None
-    image_id: int | None
-    name_id: int | None
+    row: int | None = None
+    image_id: int | None = None
+    name_id: int | None = None
 
 
 @dataclass
@@ -21,11 +21,11 @@ class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
-    row: Row3 = Row3(None, None, None)
+    row: Row3 = Row3()
 
     def hide(self):
         self.visible = False
-        self.row3 = Row3(None, None, None)
+        self.row3 = Row3()
 
     def show(self, row3: Row3):
         self.visible = True
