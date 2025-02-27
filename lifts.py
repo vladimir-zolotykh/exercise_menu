@@ -11,8 +11,12 @@ saved_photos: list[ImageTk.PhotoImage] = []
 
 
 @dataclass
-class Row3:
-    row: int | None = None      # canvas row number
+class Canv3:
+    """Extra attributes of a Lift
+
+    related to a canvas if the Lift is present in the canvas
+    """
+    row: int | None = None      # canvas row numberыи
     image_id: int | None = None
     name_id: int | None = None
 
@@ -22,15 +26,15 @@ class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
-    row3: Row3 = Row3()
+    canv3: Canv3 = Canv3()
 
     def hide(self):
         self.visible = False
-        self.row3 = Row3()
+        self.canv3 = Canv3()
 
-    def show(self, row3: Row3):
+    def show(self, canv3: Canv3):
         self.visible = True
-        self.row3 = row3
+        self.canv3 = canv3
     
 
 class Lifts(dict[str, Lift]):
@@ -54,8 +58,8 @@ class Lifts(dict[str, Lift]):
         k: str
         v: Lift
         for k, v in self.items():
-            if name == k or (name_id == v.row3.name_id and
-                             image_id == v.row3.image_id):
+            if name == k or (name_id == v.canv3.name_id and
+                             image_id == v.canv3.image_id):
                 return v
         return None
 
@@ -63,7 +67,7 @@ class Lifts(dict[str, Lift]):
         lift = self[name]
         lift.hide()
 
-    def show(self, name: str, row3: Row3):
+    def show(self, name: str, canv3: Canv3):
         lift = self[name]
-        lift.show(row3)
+        lift.show(canv3)
 
