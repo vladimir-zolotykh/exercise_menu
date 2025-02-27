@@ -6,12 +6,13 @@ from typing import Union
 from dataclasses import dataclass
 from PIL import Image as Image_mod
 from PIL import ImageTk
+import re
 saved_photos: list[ImageTk.PhotoImage] = []
 
 
 @dataclass
 class Row3:
-    row: int | None = None
+    row: int | None = None      # canvas row number
     image_id: int | None = None
     name_id: int | None = None
 
@@ -21,7 +22,7 @@ class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
-    row: Row3 = Row3()
+    row3: Row3 = Row3()
 
     def hide(self):
         self.visible = False
@@ -43,6 +44,20 @@ class Lifts(dict[str, Lift]):
             saved_photos.append(photo)
             self[lift_name] = Lift(lift_name, photo)
         return self[lift_name]
+
+    def find(
+            self, *, name: str = '', name_id: int = -1, image_id: int = -1
+    ) -> Lift | None:
+        if name:
+            if  (m := re.match('(?P<exer_name>.*)( \(\d+\))?', name)):
+                name = m.group('exer_name')
+        k: str
+        v: Lift
+        for k, v in self.items():
+            if name == k or (name_id == v.row3.name_id and
+                             image_id == v.row3.image_id):
+                return v
+        return None
 
     def hide(self, name: str):
         lift = self[name]
