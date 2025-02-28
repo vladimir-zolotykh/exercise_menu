@@ -112,7 +112,7 @@ class RegisterCash(Register):
             # saved_photos.append(
             #     img if isinstance(img, ImageTk.PhotoImage) else
             #     ImageTk.PhotoImage(img))
-            self.exercises.add(image=img, name=name)
+            self.exercises.add(name)
             # self.add_to_cashed_exercises(image=saved_photos[-1], name=name)
 
     def update_add_menu(self, menu: tk.Menu) -> None:
@@ -125,13 +125,12 @@ class RegisterCash(Register):
 
         n: Optional[int] = menu.index(tk.END)
         menu.delete(0, tk.END)
-        for exer_cash in self.exercises:
-            if not exer_cash.visible:
-                if (im := exer_cash.image):
+        for name, lift in self.exercises.items():
+            if not lift.visible:
+                if (im := lift.image):
                     menu.add_command(
-                        label=exer_cash.name,
-                        command=make_append(exer_cash.name, image=im))
-                    exer_cash.visible = False
+                        label=name, command=make_append(name, image=im))
+                    lift.visible = False
 
     def update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
@@ -148,10 +147,9 @@ class RegisterCash(Register):
         if (z := menu.index(tk.END)):
             for i in backward(z + 1):
                 menu.delete(i)
-        for exer_cash in self.exercises:
-            if exer_cash.visible:
-                menu.add_command(label=exer_cash.name,
-                                 command=make_delete_cmd(exer_cash.name))
+        for name, lift in self.exercises.items():
+            if lift.visible:
+                menu.add_command(label=name, command=make_delete_cmd(name))
 
     def _rewind(self):
         super()._rewind()
@@ -259,7 +257,7 @@ class RegisterCash(Register):
         #     self.exer_i, name, image, image_id, name_id, True))
         self.exercises.add(
             name, image, visible=True,
-            canv3=ED.Canv3(self.exer_i, image_id, name_id)
+            canv3=ED.Canv3(self.exer_i, image_id, name_id))
         self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 

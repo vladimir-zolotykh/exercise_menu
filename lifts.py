@@ -3,7 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 import os
 from typing import Union, Optional, TypedDict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from PIL import Image as Image_mod
 from PIL import ImageTk
 import re
@@ -42,7 +42,7 @@ class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
-    canv3: Canv3 = Canv3()
+    canv3: Canv3 = field(default_factory=Canv3)
 
     def hide(self):
         self.visible = False
@@ -54,7 +54,7 @@ class Lift:
     
 
 class Lifts(dict[str, Lift]):
-    def add(self, lift_name: str, image_dir: str | None) -> Lift:
+    def add(self, lift_name: str, image_dir: str | None = None) -> Lift:
         if image_dir is None:
             image_dir = os.path.expanduser('~/Downloads/')
         if lift_name not in self:
