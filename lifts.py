@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from PIL import Image as Image_mod
 from PIL import ImageTk
 import re
+import geometry as G
 saved_photos: list[ImageTk.PhotoImage] = []
 
 @dataclass
@@ -59,7 +60,7 @@ class Lifts(dict[str, Lift]):
             image_dir = os.path.expanduser('~/Downloads/')
         if lift_name not in self:
             image = Image_mod.open(os.path.join(
-                image_dir, f"{lift_name.replace(' ', '_')}.jpg"))
+                image_dir, f"{lift_name.replace(' ', '_')}.jpg")).resize(G.IMAGE)
             photo = ImageTk.PhotoImage(image)
             saved_photos.append(photo)
             self[lift_name] = Lift(lift_name, photo)
