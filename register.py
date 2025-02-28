@@ -14,9 +14,10 @@ from PIL import Image as Image_mod
 from PIL import ImageTk
 from scrolledcanvas import ScrolledCanvas
 import geometry as G
-import exerdir as ED
+# import exerdir as ED
+import lifts as ED
 
-saved_photos = []
+# saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
              "overhead press","biceps curl", "back plank")
 DirX = dict[str, Union[Image_mod.Image, ImageTk.PhotoImage]]
@@ -90,8 +91,8 @@ class RegisterCash(Register):
     ):
         super().__init__(owner, **kwargs)
         self.exer_i = 0
-        self.selected_exer: Optional[ED.ExerCash] = None
-        self.exercises = ED.ExerDir([])
+        self.selected_exer: Optional[ED.Lift] = None
+        self.exercises = ED.Lifts({})
         assert menu
         # if menu:
         self.menu = menu
@@ -108,9 +109,11 @@ class RegisterCash(Register):
 
     def initialize_exercises(self):
         for name, img in dirx.items():
-            saved_photos.append(img if isinstance(img, ImageTk.PhotoImage) else
-                                ImageTk.PhotoImage(img))
-            self.add_to_cashed_exercises(image=saved_photos[-1], name=name)
+            # saved_photos.append(
+            #     img if isinstance(img, ImageTk.PhotoImage) else
+            #     ImageTk.PhotoImage(img))
+            self.exercises.add(image=img, name=name)
+            # self.add_to_cashed_exercises(image=saved_photos[-1], name=name)
 
     def update_add_menu(self, menu: tk.Menu) -> None:
         def make_append(
@@ -155,7 +158,7 @@ class RegisterCash(Register):
         self.exer_i = 0
 
     def highlight_rect(
-            self, exer_row: ED.ExerCash, fill: Optional[str] = None
+            self, exer_row: ED.Lift, fill: Optional[str] = None
     ) -> None:
         """highlight_rect(EX_ROW, fill='lightblue') - to highlight,
         highlight_rect(EX) - undo highlight"""
@@ -186,7 +189,7 @@ class RegisterCash(Register):
         if self.selected_exer:  # undo selected rect
             # self.draw_rect(row=self.selected_exer.row)
             self.highlight_rect(self.selected_exer)
-        ex: ED.ExerCash
+        ex: ED.Lift
         # kw: dict[str, int] = {}
         kw: ED.FindArgs = {}
         if typ == 'image':
@@ -227,15 +230,22 @@ class RegisterCash(Register):
         self.delete('all')
         # super()._rewind()
         self._rewind()
-        exer_dir_copy: list[ED.ExerCash] = copy.copy(self.exercises)
+        # exer_dir_copy: list[ED.Lift] = copy.copy(self.exercises)
         # for exer_cash in self.exercises:
-        self.exercises = ED.ExerDir()
-        for exer_cash in exer_dir_copy:
-            if exer_cash.visible:
-                assert exer_cash.image
+        # self.exercises = ED.Lifts()
+        # for exer_cash in exer_dir_copy:
+        for lift in self.exercises:
+            if lift.visible:
+                lift.canv3 = ED.Canv3()
+                # assert exer_cash.image
                 im: ImageTk.PhotoImage = exer_cash.image
-                self.add_to_cashed_exercises(image=im, name=exer_cash.name)
-        del exer_dir_copy
+                image_id, name_id = self.add_to_canvas(
+                    image=im, name=lift.name)
+                # canv3: ED.Canv3 = self.add_to_canvas(image=im,name=lift.name)
+                lift.canv3 = Canv3(
+                    self.exer_i, image_id=image_id, name_id=name_id)
+                # self.add_to_cashed_exercises(image=im, name=exer_cash.name)
+        # del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
 
     def add_to_cashed_exercises(
@@ -245,8 +255,11 @@ class RegisterCash(Register):
         if image_id is None or name_id is None:
             image_id, name_id = super().add_to_canvas(
                 image=image, name=name, exer_id=self.exer_i)
-        self.exercises.append(ED.ExerCash(
-            self.exer_i, name, image, image_id, name_id, True))
+        # self.exercises.append(ED.Lift(
+        #     self.exer_i, name, image, image_id, name_id, True))
+        self.exercises.add(
+            name, image, visible=True,
+            canv3=ED.Canv3(self.exer_i, image_id, name_id)
         self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 

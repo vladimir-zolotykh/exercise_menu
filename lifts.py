@@ -2,13 +2,29 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import os
-from typing import Union
+from typing import Union, Optional, TypedDict
 from dataclasses import dataclass
 from PIL import Image as Image_mod
 from PIL import ImageTk
 import re
 saved_photos: list[ImageTk.PhotoImage] = []
 
+@dataclass
+class SelectRect:
+    # x0, y0, x1, y1, ...
+    coord: list[float] = field(default_factory=list)
+    # line_id = canv.create_line()
+    line_id: Optional[int] = None
+    # 'background', 'lightblue'
+    fill: Optional[str] = None
+
+# highlighted rectangle around selected exercise
+select_rect: SelectRect = SelectRect()
+
+class FindArgs(TypedDict, total=False):
+    name: str
+    image_id: int
+    name_id: int
 
 @dataclass
 class Canv3:
@@ -32,9 +48,9 @@ class Lift:
         self.visible = False
         self.canv3 = Canv3()
 
-    def show(self, canv3: Canv3):
-        self.visible = True
-        self.canv3 = canv3
+    # def show(self, canv3: Canv3):
+    #     self.visible = True
+    #     self.canv3 = canv3
     
 
 class Lifts(dict[str, Lift]):
