@@ -255,9 +255,13 @@ class RegisterCash(Register):
                 image=image, name=name, exer_id=self.exer_i)
         # self.exercises.append(ED.Lift(
         #     self.exer_i, name, image, image_id, name_id, True))
-        self.exercises.add(
-            name, image, visible=True,
-            canv3=ED.Canv3(self.exer_i, image_id, name_id))
+        lift: Lift | None = self.exercises.add(name)
+        if lift:
+            lift.visible = True
+            lift.canv3 = ED.Canv3(self.exer_i, image_id, name_id)
+        # self.exercises.add(
+        #     name, image, visible=True,
+        #     canv3=ED.Canv3(self.exer_i, image_id, name_id))
         self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 
