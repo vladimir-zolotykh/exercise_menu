@@ -210,7 +210,7 @@ class RegisterCash(Register):
         """Remove EXER_NAME from canvas"""
         
         if exer_name:
-            ex = self.exercises.find_exer(name=exer_name)
+            ex = self.exercises.find(name=exer_name)
         elif self.selected_exer:
             ex = self.selected_exer
         else:
@@ -219,7 +219,8 @@ class RegisterCash(Register):
             return
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
-            self.exercises.hide_in_exercises(ex)
+            # self.exercises.hide_in_exercises(ex)
+            ex.visible = False
             self.update_add_menu(self.add_menu)
             self.update_del_menu(self.del_menu)
             self.refresh()
@@ -232,11 +233,12 @@ class RegisterCash(Register):
         # for exer_cash in self.exercises:
         # self.exercises = ED.Lifts()
         # for exer_cash in exer_dir_copy:
-        for lift in self.exercises:
+        for name, lift in self.exercises.items():
             if lift.visible:
                 lift.canv3 = ED.Canv3()
                 # assert exer_cash.image
-                im: ImageTk.PhotoImage = exer_cash.image
+                # im: ImageTk.PhotoImage = exer_cash.image
+                im: ImageTk.PhotoImage = lift.image
                 image_id, name_id = self.add_to_canvas(
                     image=im, name=lift.name)
                 # canv3: ED.Canv3 = self.add_to_canvas(image=im,name=lift.name)
