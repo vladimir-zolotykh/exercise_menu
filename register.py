@@ -259,6 +259,7 @@ class RegisterCash(Register):
         if lift:
             lift.visible = True
             lift.canv3 = ED.Canv3(self.exer_i, image_id, name_id)
+            self.update_del_menu(self.del_menu)
         # self.exercises.add(
         #     name, image, visible=True,
         #     canv3=ED.Canv3(self.exer_i, image_id, name_id))
