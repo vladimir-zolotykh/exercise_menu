@@ -86,5 +86,6 @@ class Lifts(dict[str, Lift]):
 
     def show(self, name: str, canv3: Canv3):
         lift = self[name]
-        lift.show(canv3)
+        lift.visible = True
+        # lift.show(canv3)
 

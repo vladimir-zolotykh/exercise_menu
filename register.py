@@ -166,7 +166,7 @@ class RegisterCash(Register):
             ED.select_rect.line_id = None
             self.delete(line_id)
             return
-        row = exer_row.row
+        row = exer_row.canv3.row
         x0, y0 = self._get_xy(row)
         x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
               G.TEXT_WIDTH)
@@ -187,7 +187,7 @@ class RegisterCash(Register):
         if self.selected_exer:  # undo selected rect
             # self.draw_rect(row=self.selected_exer.row)
             self.highlight_rect(self.selected_exer)
-        ex: ED.Lift
+        ex: ED.Lift | None
         # kw: dict[str, int] = {}
         kw: ED.FindArgs = {}
         if typ == 'image':
@@ -199,16 +199,18 @@ class RegisterCash(Register):
                             f'(must be "image" or "text")')
         # if (ex := self.exercises.find_exer(image_id=item[0],
         #                                     name_id=item[0])):
-        if (ex := self.exercises.find_exer(**kw)):
+        if (ex := self.exercises.find(**kw)):
             self.selected_exer = ex
         # self.draw_rect(row=ex.row, fill='lightblue')
-        self.highlight_rect(ex, fill='lightblue')
+        if ex:
+            self.highlight_rect(ex, fill='lightblue')
         # if self.menu:
         #     MethodType(_change_label, self.menu)(ex.name)
 
     def remove_from_canvas(self, exer_name: Optional[str] = None) -> None:
         """Remove EXER_NAME from canvas"""
-        
+
+        ex: ED.Lift | None
         if exer_name:
             ex = self.exercises.find(name=exer_name)
         elif self.selected_exer:
@@ -217,6 +219,7 @@ class RegisterCash(Register):
             showwarning(f'{__name__}.showwarning',
                     f'Select exercise to delete', parent=self)
             return
+        assert ex
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
             # self.exercises.hide_in_exercises(ex)
@@ -242,7 +245,7 @@ class RegisterCash(Register):
                 image_id, name_id = self.add_to_canvas(
                     image=im, name=lift.name)
                 # canv3: ED.Canv3 = self.add_to_canvas(image=im,name=lift.name)
-                lift.canv3 = Canv3(
+                lift.canv3 = ED.Canv3(
                     self.exer_i, image_id=image_id, name_id=name_id)
                 # self.add_to_cashed_exercises(image=im, name=exer_cash.name)
         # del exer_dir_copy
@@ -257,7 +260,7 @@ class RegisterCash(Register):
                 image=image, name=name, exer_id=self.exer_i)
         # self.exercises.append(ED.Lift(
         #     self.exer_i, name, image, image_id, name_id, True))
-        lift: Lift | None = self.exercises.add(name)
+        lift: ED.Lift | None = self.exercises.add(name)
         if lift:
             lift.visible = True
             lift.canv3 = ED.Canv3(self.exer_i, image_id, name_id)
