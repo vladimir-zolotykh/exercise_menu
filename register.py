@@ -144,9 +144,10 @@ class RegisterCash(Register):
         def backward(n: int) -> range:
             return range(n - 1, -1, -1)
 
-        if (z := menu.index(tk.END)):
-            for i in backward(z + 1):
-                menu.delete(i)
+        menu.delete(0, tk.END)
+        # if (z := menu.index(tk.END)):
+        #     for i in backward(z + 1):
+        #         menu.delete(i)
         for name, lift in self.exercises.items():
             if lift.visible:
                 menu.add_command(label=name, command=make_delete_cmd(name))
@@ -224,8 +225,9 @@ class RegisterCash(Register):
                        f'Delete exercise {ex.name}? ', parent=self):
             # self.exercises.hide_in_exercises(ex)
             ex.visible = False
-            self.update_add_menu(self.add_menu)
             self.update_del_menu(self.del_menu)
+            self.update_add_menu(self.add_menu)
+            # self.update_del_menu(self.del_menu)
             self.refresh()
 
     def refresh(self) -> None:
@@ -265,6 +267,7 @@ class RegisterCash(Register):
             lift.visible = True
             lift.canv3 = ED.Canv3(self.exer_i, image_id, name_id)
             self.update_del_menu(self.del_menu)
+            self.update_add_menu(self.add_menu)
         # self.exercises.add(
         #     name, image, visible=True,
         #     canv3=ED.Canv3(self.exer_i, image_id, name_id))
