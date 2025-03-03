@@ -48,10 +48,6 @@ class Lift:
     def hide(self):
         self.visible = False
         self.canv3 = Canv3()
-
-    # def show(self, canv3: Canv3):
-    #     self.visible = True
-    #     self.canv3 = canv3
     
 
 class Lifts(dict[str, Lift]):
@@ -60,7 +56,8 @@ class Lifts(dict[str, Lift]):
             image_dir = os.path.expanduser('~/Downloads/')
         if lift_name not in self:
             image = Image_mod.open(os.path.join(
-                image_dir, f"{lift_name.replace(' ', '_')}.jpg")).resize(G.IMAGE)
+                image_dir,
+                f"{lift_name.replace(' ', '_')}.jpg")).resize(G.IMAGE)
             photo = ImageTk.PhotoImage(image)
             saved_photos.append(photo)
             self[lift_name] = Lift(lift_name, photo)
@@ -80,13 +77,3 @@ class Lifts(dict[str, Lift]):
                              image_id == v.canv3.image_id):
                 return v
         return None
-
-    def hide(self, name: str):
-        lift = self[name]
-        lift.hide()
-
-    def show(self, name: str, canv3: Canv3):
-        lift = self[name]
-        lift.visible = True
-        # lift.show(canv3)
-
