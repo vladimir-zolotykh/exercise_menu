@@ -113,6 +113,7 @@ class RegisterCash(Register):
             #     img if isinstance(img, ImageTk.PhotoImage) else
             #     ImageTk.PhotoImage(img))
             self.exercises.add(name)
+            self.refresh()
             # self.add_to_cashed_exercises(image=saved_photos[-1], name=name)
 
     def update_add_menu(self, menu: tk.Menu) -> None:

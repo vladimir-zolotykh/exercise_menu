@@ -64,6 +64,7 @@ class Lifts(dict[str, Lift]):
             photo = ImageTk.PhotoImage(image)
             saved_photos.append(photo)
             self[lift_name] = Lift(lift_name, photo)
+            self[lift_name].visible = True
         return self[lift_name]
 
     def find(
