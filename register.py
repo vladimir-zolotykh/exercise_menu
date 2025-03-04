@@ -239,6 +239,7 @@ class RegisterCash(Register):
         # for exer_cash in self.exercises:
         # self.exercises = ED.Lifts()
         # for exer_cash in exer_dir_copy:
+        exer_id: int = 1
         for name, lift in self.exercises.items():
             if lift.visible:
                 lift.canv3 = ED.Canv3()
@@ -246,7 +247,8 @@ class RegisterCash(Register):
                 # im: ImageTk.PhotoImage = exer_cash.image
                 im: ImageTk.PhotoImage = lift.image
                 image_id, name_id = self.add_to_canvas(
-                    image=im, name=lift.name)
+                    image=im, name=lift.name, exer_id=exer_id)
+                exer_id += 1
                 # canv3: ED.Canv3 = self.add_to_canvas(image=im,name=lift.name)
                 lift.canv3 = ED.Canv3(
                     self.exer_i, image_id=image_id, name_id=name_id)
