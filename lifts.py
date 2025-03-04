@@ -33,7 +33,6 @@ class Canv3:
 
     related to a canvas if the Lift is present in the canvas
     """
-    row: int | None = None      # canvas row numberыи
     image_id: int | None = None
     name_id: int | None = None
 

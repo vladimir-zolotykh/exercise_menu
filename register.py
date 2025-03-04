@@ -251,7 +251,7 @@ class RegisterCash(Register):
                 exer_id += 1
                 # canv3: ED.Canv3 = self.add_to_canvas(image=im,name=lift.name)
                 lift.canv3 = ED.Canv3(
-                    self.exer_i, image_id=image_id, name_id=name_id)
+                    image_id=image_id, name_id=name_id)
                 # self.add_to_cashed_exercises(image=im, name=exer_cash.name)
         # del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
@@ -268,7 +268,7 @@ class RegisterCash(Register):
         lift: ED.Lift | None = self.exercises.add(name)
         if lift:
             lift.visible = True
-            lift.canv3 = ED.Canv3(self.exer_i, image_id, name_id)
+            lift.canv3 = ED.Canv3(image_id, name_id)
             # self.update_del_menu(self.del_menu)
             # self.update_add_menu(self.add_menu)
         # self.exercises.add(
