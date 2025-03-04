@@ -27,26 +27,14 @@ class FindArgs(TypedDict, total=False):
     image_id: int
     name_id: int
 
-@dataclass
-class Canv3:
-    """Extra attributes of a Lift
-
-    related to a canvas if the Lift is present in the canvas
-    """
-    image_id: int | None = None
-    name_id: int | None = None
-
 
 @dataclass
 class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
-    canv3: Canv3 = field(default_factory=Canv3)
-
-    def hide(self):
-        self.visible = False
-        self.canv3 = Canv3()
+    image_id: int | None = None
+    name_id: int | None = None
     
 
 class Lifts(dict[str, Lift]):
