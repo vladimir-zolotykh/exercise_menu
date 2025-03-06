@@ -158,9 +158,9 @@ class RegisterCash(Register):
               G.TEXT_WIDTH)
         y1 = y0 + G.BORDER.height + G.IMAGE.height
         coord = list(map(float, (x0, y0, x1, y0, x1, y1, x0, y1)))
-        ED.select_rect(
-            coord=coord,fill=fill
-            line_id=self.create_line(*coord, width=2, fill=cast(str, fill))
+        ED.select_rect = ED.SelectRect(
+            coord=coord, fill=fill,
+            line_id=self.create_line(*coord, width=2, fill=cast(str, fill)))
 
     def on_click(self, event: tk.Event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
