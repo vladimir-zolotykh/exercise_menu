@@ -6,7 +6,6 @@ from typing import Union, Optional, TypedDict
 from dataclasses import dataclass, field
 from PIL import Image as Image_mod
 from PIL import ImageTk
-import re
 import geometry as G
 saved_photos: list[ImageTk.PhotoImage] = []
 
@@ -33,7 +32,7 @@ class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
-    # the attributes below are valid if visible is True
+    # the attributes below are valid if the LIFT is on the canvas
     row: int | None = None      # canvas row
     image_id: int | None = None
     name_id: int | None = None
@@ -56,9 +55,6 @@ class Lifts(dict[str, Lift]):
     def find(
             self, *, name: str = '', name_id: int = -1, image_id: int = -1
     ) -> Lift | None:
-        if name:
-            if  (m := re.match('(?P<exer_name>.*)( \(\d+\))?', name)):
-                name = m.group('exer_name')
         k: str
         v: Lift
         for k, v in self.items():
