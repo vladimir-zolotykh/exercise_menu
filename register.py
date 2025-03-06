@@ -55,7 +55,6 @@ class Register(ScrolledCanvas):
     def add_to_canvas(
             self, *, image: ImageTk.PhotoImage, name='', exer_id=0
     ) -> tuple[int, int]:
-        print('add_to_canvas')
         ex_str = name
         x0, y0 = self._get_xy(self._row)
         image_id = self.create_image(x0, y0, image=image, anchor=tk.NW)
@@ -148,7 +147,6 @@ class RegisterCash(Register):
     ) -> None:
         """highlight_rect(EX_ROW, fill='lightblue') - to highlight,
         highlight_rect(EX) - undo highlight"""
-        
         if fill is None and isinstance(ED.select_rect.line_id, int):
             line_id = ED.select_rect.line_id
             ED.select_rect.line_id = None
@@ -160,10 +158,9 @@ class RegisterCash(Register):
               G.TEXT_WIDTH)
         y1 = y0 + G.BORDER.height + G.IMAGE.height
         coord = list(map(float, (x0, y0, x1, y0, x1, y1, x0, y1)))
-        ED.select_rect.coord = coord
-        ED.select_rect.fill = fill
-        ED.select_rect.line_id = self.create_line(
-            *coord, width=2, fill=cast(str, fill))
+        ED.select_rect(
+            coord=coord,fill=fill
+            line_id=self.create_line(*coord, width=2, fill=cast(str, fill))
 
     def on_click(self, event: tk.Event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
@@ -183,8 +180,6 @@ class RegisterCash(Register):
                             f'(must be "image" or "text")')
         if (ex := self.exercises.find(**kw)):
             self.selected_exer = ex
-        print(f'{kw = }, {ex = }')
-        if ex:
             self.highlight_rect(ex, fill='lightblue')
 
     def remove_from_canvas(self, exer_name: Optional[str] = None) -> None:

@@ -58,7 +58,6 @@ class Lifts(dict[str, Lift]):
         k: str
         v: Lift
         for k, v in self.items():
-            if name == k or (name_id == v.name_id and
-                             image_id == v.image_id):
+            if name == k or name_id == v.name_id or image_id == v.image_id:
                 return v
         return None
