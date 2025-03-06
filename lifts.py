@@ -33,6 +33,8 @@ class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
     visible: bool = False
+    # the attributes below are valid if visible is True
+    row: int | None = None      # canvas row
     image_id: int | None = None
     name_id: int | None = None
     
@@ -48,7 +50,7 @@ class Lifts(dict[str, Lift]):
             photo = ImageTk.PhotoImage(image)
             saved_photos.append(photo)
             self[lift_name] = Lift(lift_name, photo)
-            self[lift_name].visible = True
+            self[lift_name].visible = False
         return self[lift_name]
 
     def find(

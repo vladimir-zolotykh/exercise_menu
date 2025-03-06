@@ -55,22 +55,12 @@ class Register(ScrolledCanvas):
     def add_to_canvas(
             self, *, image: ImageTk.PhotoImage, name='', exer_id=0
     ) -> tuple[int, int]:
-        ex_str = f'{name} ({exer_id})'
-        # self.toggle_selection_rect()
+        print('add_to_canvas')
+        ex_str = name
         x0, y0 = self._get_xy(self._row)
         image_id = self.create_image(x0, y0, image=image, anchor=tk.NW)
         x1 = x0 + G.BORDER[0] + G.IMAGE[0] + G.BORDER[0]
         name_id = self.create_text(x1, y0, text=ex_str, anchor=tk.NW)
-
-        def font_metrics() -> tuple[int, int]:
-            name: str = self.itemcget(name_id, 'font') # 'TkDefaultFont'
-            font = tkfont.nametofont(name)
-            width = font.measure(ex_str) // len(ex_str)
-            height = font.metrics("linespace")
-            # font_width = 6, font_height = 17
-            return width, height
-
-        font_metrics()
         self._row += 1
         return image_id, name_id
 
@@ -109,12 +99,8 @@ class RegisterCash(Register):
 
     def initialize_exercises(self):
         for name, img in dirx.items():
-            # saved_photos.append(
-            #     img if isinstance(img, ImageTk.PhotoImage) else
-            #     ImageTk.PhotoImage(img))
             self.exercises.add(name)
-            self.refresh()
-            # self.add_to_cashed_exercises(image=saved_photos[-1], name=name)
+        self.refresh()
 
     def update_add_menu(self, menu: tk.Menu) -> None:
         def make_append(
@@ -168,7 +154,7 @@ class RegisterCash(Register):
             ED.select_rect.line_id = None
             self.delete(line_id)
             return
-        row = exer_row.canv3.row
+        row = exer_row.row
         x0, y0 = self._get_xy(row)
         x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
               G.TEXT_WIDTH)
@@ -179,18 +165,14 @@ class RegisterCash(Register):
         ED.select_rect.line_id = self.create_line(
             *coord, width=2, fill=cast(str, fill))
 
-
     def on_click(self, event: tk.Event):
         item = self.find_closest(self.canvasx(event.x), self.canvasy(event.y))
-        # self.type(item[0]): 'image', 'text', or 'line'
         typ: str = cast(str, self.type(item[0]))
         if typ == 'line':       # ignore the border
             return
         if self.selected_exer:  # undo selected rect
-            # self.draw_rect(row=self.selected_exer.row)
             self.highlight_rect(self.selected_exer)
         ex: ED.Lift | None
-        # kw: dict[str, int] = {}
         kw: ED.FindArgs = {}
         if typ == 'image':
             kw['image_id'] = item[0]
@@ -199,15 +181,11 @@ class RegisterCash(Register):
         else:
             raise TypeError(f'{typ}: Invalid item type '
                             f'(must be "image" or "text")')
-        # if (ex := self.exercises.find_exer(image_id=item[0],
-        #                                     name_id=item[0])):
         if (ex := self.exercises.find(**kw)):
             self.selected_exer = ex
-        # self.draw_rect(row=ex.row, fill='lightblue')
+        print(f'{kw = }, {ex = }')
         if ex:
             self.highlight_rect(ex, fill='lightblue')
-        # if self.menu:
-        #     MethodType(_change_label, self.menu)(ex.name)
 
     def remove_from_canvas(self, exer_name: Optional[str] = None) -> None:
         """Remove EXER_NAME from canvas"""
@@ -224,37 +202,23 @@ class RegisterCash(Register):
         assert ex
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
-            # self.exercises.hide_in_exercises(ex)
             ex.visible = False
             self.update_del_menu(self.del_menu)
             self.update_add_menu(self.add_menu)
-            # self.update_del_menu(self.del_menu)
             self.refresh()
 
     def refresh(self) -> None:
         self.delete('all')
-        # super()._rewind()
         self._rewind()
-        # exer_dir_copy: list[ED.Lift] = copy.copy(self.exercises)
-        # for exer_cash in self.exercises:
-        # self.exercises = ED.Lifts()
-        # for exer_cash in exer_dir_copy:
         exer_id: int = 1
         for name, lift in self.exercises.items():
             if lift.visible:
-                # lift.canv3 = ED.Canv3()
-                # assert exer_cash.image
-                # im: ImageTk.PhotoImage = exer_cash.image
                 im: ImageTk.PhotoImage = lift.image
                 image_id, name_id = self.add_to_canvas(
                     image=im, name=lift.name, exer_id=exer_id)
                 exer_id += 1
-                # canv3: ED.Canv3 = self.add_to_canvas(image=im,name=lift.name)
+                lift.row = exer_id
                 lift.image_id, lift.name_id = image_id, name_id
-                # lift.canv3 = ED.Canv3(
-                #     image_id=image_id, name_id=name_id)
-                # self.add_to_cashed_exercises(image=im, name=exer_cash.name)
-        # del exer_dir_copy
         self.configure(scrollregion = self.bbox("all"))
 
     def add_to_cashed_exercises(
