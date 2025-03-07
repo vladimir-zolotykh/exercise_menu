@@ -151,6 +151,7 @@ class RegisterCash(Register):
             self.delete(line_id)
             return
         row = exer_row.row
+        assert isinstance(row, int)
         x0, y0 = self._get_xy(row)
         x1 = (x0 + G.BORDER.width + G.IMAGE.width + G.BORDER.width +
               G.TEXT_WIDTH)
