@@ -100,41 +100,20 @@ class RegisterCash(Register):
         self._update_del_menu(self.del_menu)
         
     def _update_add_menu(self, menu: tk.Menu) -> None:
-        def make_append(
-                name: str, image: ImageTk.PhotoImage
-        ) -> Callable[[], None]:
-            def _call_method():
-                self.make_visible(name)
-            return _call_method
-
-        n: Optional[int] = menu.index(tk.END)
         menu.delete(0, tk.END)
         for name, lift in self.exercises.items():
             if not lift.visible:
-                if (im := lift.image):
-                    menu.add_command(
-                        label=name, command=make_append(name, image=im))
-                    lift.visible = False
+                menu.add_command(
+                    label=name, command=lambda n=name: self.make_visible(n))
+                lift.visible = False
 
     def _update_del_menu(self, menu: tk.Menu) -> None:
-        def make_delete_cmd(name: str) -> Callable[[], None]:
-            def _call_method():
-                self.remove_from_canvas(name)
-            return _call_method
-
-        n: Optional[int] = menu.index(tk.END)
-        # menu.delete(0, 'end')
-
-        def backward(n: int) -> range:
-            return range(n - 1, -1, -1)
-
         menu.delete(0, tk.END)
-        # if (z := menu.index(tk.END)):
-        #     for i in backward(z + 1):
-        #         menu.delete(i)
         for name, lift in self.exercises.items():
             if lift.visible:
-                menu.add_command(label=name, command=make_delete_cmd(name))
+                menu.add_command(
+                    label=name,
+                    command=lambda n=name: self.remove_from_canvas(n))
 
     def _rewind(self):
         super()._rewind()
