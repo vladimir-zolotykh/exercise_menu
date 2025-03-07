@@ -104,7 +104,8 @@ class RegisterCash(Register):
         for name, lift in self.exercises.items():
             if not lift.visible:
                 menu.add_command(
-                    label=name, command=lambda n=name: self.make_visible(n))
+                    label=name,
+                    command=lambda n=name: self.make_visible(n)) # type: ignore
                 lift.visible = False
 
     def _update_del_menu(self, menu: tk.Menu) -> None:
@@ -113,7 +114,7 @@ class RegisterCash(Register):
             if lift.visible:
                 menu.add_command(
                     label=name,
-                    command=lambda n=name: self.remove_from_canvas(n))
+                    command=lambda n=name: self.remove_from_canvas(n)) # type: ignore
 
     def _rewind(self):
         super()._rewind()
