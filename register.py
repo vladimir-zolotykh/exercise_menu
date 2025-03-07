@@ -96,10 +96,10 @@ class RegisterCash(Register):
         self.refresh()
 
     def update_menu(self) -> None:
-        self.update_add_menu(self.add_menu)
-        self.update_del_menu(self.del_menu)
+        self._update_add_menu(self.add_menu)
+        self._update_del_menu(self.del_menu)
         
-    def update_add_menu(self, menu: tk.Menu) -> None:
+    def _update_add_menu(self, menu: tk.Menu) -> None:
         def make_append(
                 name: str, image: ImageTk.PhotoImage
         ) -> Callable[[], None]:
@@ -116,7 +116,7 @@ class RegisterCash(Register):
                         label=name, command=make_append(name, image=im))
                     lift.visible = False
 
-    def update_del_menu(self, menu: tk.Menu) -> None:
+    def _update_del_menu(self, menu: tk.Menu) -> None:
         def make_delete_cmd(name: str) -> Callable[[], None]:
             def _call_method():
                 self.remove_from_canvas(name)
