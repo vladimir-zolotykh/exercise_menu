@@ -205,15 +205,15 @@ class RegisterCash(Register):
     def refresh(self) -> None:
         self.delete('all')
         self._rewind()
-        exer_id: int = 1
+        exer_id: int = 0
         for name, lift in self.exercises.items():
             if lift.visible:
                 im: ImageTk.PhotoImage = lift.image
                 image_id, name_id = self.add_to_canvas(
                     image=im, name=lift.name, exer_id=exer_id)
-                exer_id += 1
                 lift.row = exer_id
                 lift.image_id, lift.name_id = image_id, name_id
+                exer_id += 1
         self.configure(scrollregion = self.bbox("all"))
 
     def add_to_cashed_exercises(
