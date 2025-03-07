@@ -223,18 +223,12 @@ class RegisterCash(Register):
         if image_id is None or name_id is None:
             image_id, name_id = super().add_to_canvas(
                 image=image, name=name, exer_id=self.exer_i)
-        # self.exercises.append(ED.Lift(
-        #     self.exer_i, name, image, image_id, name_id, True))
         lift: ED.Lift | None = self.exercises.add(name)
         if lift:
             lift.visible = True
             lift.image_id, lift.name_id = image_id, name_id
-            # lift.canv3 = ED.Canv3(image_id, name_id)
-            # self.update_del_menu(self.del_menu)
-            # self.update_add_menu(self.add_menu)
-        # self.exercises.add(
-        #     name, image, visible=True,
-        #     canv3=ED.Canv3(self.exer_i, image_id, name_id))
+        self.update_add_menu(self.add_menu)
+        self.update_del_menu(self.del_menu)
         self.configure(scrollregion = self.bbox("all"))
         self.exer_i += 1
 
