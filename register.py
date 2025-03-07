@@ -41,27 +41,23 @@ class Register(ScrolledCanvas):
         self._rewind()
 
     def _rewind(self) -> None:
-        self._row: int = 0
+        self._row: int = 0      # canvas row (0-based)
         self._x: int = 0
         self._y: int = 0
 
-    def _get_xy(self, row: Optional[int] = None) -> tuple[int, int]:
-        if row is None:
-            return self._x, self._y
-        else:
-            return 0 + G.BORDER.width, row * G.ROW_HEIGHT + G.BORDER.height
+    def _get_xy(self, row: int) -> tuple[int, int]:
+        return 0 + G.BORDER.width, row * G.ROW_HEIGHT + G.BORDER.height
 
 
     def add_to_canvas(
-            self, *, image: ImageTk.PhotoImage, name='', exer_id=0
-    ) -> tuple[int, int]:
-        ex_str = name
+            self, *, image: ImageTk.PhotoImage, name: str
+    ) -> tuple[int, int, int]:
         x0, y0 = self._get_xy(self._row)
         image_id = self.create_image(x0, y0, image=image, anchor=tk.NW)
         x1 = x0 + G.BORDER[0] + G.IMAGE[0] + G.BORDER[0]
-        name_id = self.create_text(x1, y0, text=ex_str, anchor=tk.NW)
+        name_id = self.create_text(x1, y0, text=name, anchor=tk.NW)
         self._row += 1
-        return image_id, name_id
+        return self._row - 1, image_id, name_id
 
 
 def _change_label(self, exer_name):
@@ -106,7 +102,7 @@ class RegisterCash(Register):
                 name: str, image: ImageTk.PhotoImage
         ) -> Callable[[], None]:
             def _call_method():
-                return self.add_to_cashed_exercises(image=image, name=name)
+                self.make_visible(name)
             return _call_method
 
         n: Optional[int] = menu.index(tk.END)
@@ -205,32 +201,22 @@ class RegisterCash(Register):
     def refresh(self) -> None:
         self.delete('all')
         self._rewind()
-        exer_id: int = 0
         for name, lift in self.exercises.items():
             if lift.visible:
                 im: ImageTk.PhotoImage = lift.image
-                image_id, name_id = self.add_to_canvas(
-                    image=im, name=lift.name, exer_id=exer_id)
-                lift.row = exer_id
+                row, image_id, name_id = self.add_to_canvas(
+                    image=im, name=lift.name)
+                lift.row = row
                 lift.image_id, lift.name_id = image_id, name_id
-                exer_id += 1
         self.configure(scrollregion = self.bbox("all"))
 
-    def add_to_cashed_exercises(
-            self, *, image: ImageTk.PhotoImage, name: str,
-            image_id: Optional[int] = None, name_id: Optional[int] = None
-    ):
-        if image_id is None or name_id is None:
-            image_id, name_id = super().add_to_canvas(
-                image=image, name=name, exer_id=self.exer_i)
-        lift: ED.Lift | None = self.exercises.add(name)
-        if lift:
-            lift.visible = True
-            lift.image_id, lift.name_id = image_id, name_id
+    def make_visible(self, name: str) -> None:
+        lift = self.exercises.find(name=name)
+        assert lift
+        lift.visible = True
         self.update_add_menu(self.add_menu)
         self.update_del_menu(self.del_menu)
-        self.configure(scrollregion = self.bbox("all"))
-        self.exer_i += 1
+        self.refresh()
 
 class RegisterFrame(tk.Frame):
     def __init__(self, owner, *, menu):
