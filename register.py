@@ -86,10 +86,8 @@ class RegisterCash(Register):
         self.del_menu = del_menu = tk.Menu(menu, name='del_menu', tearoff=0)
         menu.add_cascade(label='Del', menu=del_menu)
         self.initialize_exercises()
-        self.update_add_menu(add_menu)
-        self.update_del_menu(del_menu)
+        self.update_menu()
         self.configure(scrollregion = self.bbox("all"))
-
         self.bind("<Button-1>", self.on_click)
 
     def initialize_exercises(self):
@@ -97,6 +95,10 @@ class RegisterCash(Register):
             self.exercises.add(name)
         self.refresh()
 
+    def update_menu(self) -> None:
+        self.update_add_menu(self.add_menu)
+        self.update_del_menu(self.del_menu)
+        
     def update_add_menu(self, menu: tk.Menu) -> None:
         def make_append(
                 name: str, image: ImageTk.PhotoImage
@@ -194,8 +196,7 @@ class RegisterCash(Register):
         if askokcancel(f'{__name__}.askokcancel',
                        f'Delete exercise {ex.name}? ', parent=self):
             ex.visible = False
-            self.update_del_menu(self.del_menu)
-            self.update_add_menu(self.add_menu)
+            self.update_menu()
             self.refresh()
 
     def refresh(self) -> None:
@@ -214,8 +215,7 @@ class RegisterCash(Register):
         lift = self.exercises.find(name=name)
         assert lift
         lift.visible = True
-        self.update_add_menu(self.add_menu)
-        self.update_del_menu(self.del_menu)
+        self.update_menu()
         self.refresh()
 
 class RegisterFrame(tk.Frame):
