@@ -94,24 +94,22 @@ class RegisterCash(Register):
         self.refresh()
 
     def update_menu(self) -> None:
-        self._update_add_menu(self.add_menu)
-        self._update_del_menu(self.del_menu)
-        
-    def _update_add_menu(self, menu: tk.Menu) -> None:
-        menu.delete(0, tk.END)
-        for name, lift in self.exercises.items():
-            if not lift.visible:
-                menu.add_command(
-                    label=name,
-                    command=lambda n=name: self.show_lift(n)) # type: ignore
+        def callback(
+                meth: Callable[[str], None], name: str
+        ) -> Callable[[], None]:
+            def _call_method():
+                meth(name)
+            return _call_method
 
-    def _update_del_menu(self, menu: tk.Menu) -> None:
-        menu.delete(0, tk.END)
+        self.add_menu.delete(0, tk.END)
+        self.del_menu.delete(0, tk.END)
         for name, lift in self.exercises.items():
             if lift.visible:
-                menu.add_command(
-                    label=name,
-                    command=lambda n=name: self.hide_lift(n)) # type: ignore
+                self.del_menu.add_command(
+                    label=name, command=callback(self.hide_lift, name))
+            else:
+                self.add_menu.add_command(
+                    label=name, command=callback(self.show_lift, name))
 
     def highlight_rect(
             self, exer_row: ED.Lift, fill: Optional[str] = None
