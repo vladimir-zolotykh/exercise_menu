@@ -112,7 +112,7 @@ class RegisterCash(Register):
             if lift.visible:
                 menu.add_command(
                     label=name,
-                    command=lambda n=name: self.remove_from_canvas(n)) # type: ignore
+                    command=lambda n=name: self.hide_lift(n)) # type: ignore
 
     def highlight_rect(
             self, exer_row: ED.Lift, fill: Optional[str] = None
@@ -155,7 +155,7 @@ class RegisterCash(Register):
             self.selected_exer = ex
             self.highlight_rect(ex, fill='lightblue')
 
-    def remove_from_canvas(self, exer_name: Optional[str] = None) -> None:
+    def hide_lift(self, exer_name: Optional[str] = None) -> None:
         """Remove EXER_NAME from canvas"""
 
         ex: ED.Lift | None
