@@ -60,16 +60,6 @@ class Register(ScrolledCanvas):
         return self._row - 1, image_id, name_id
 
 
-def _change_label(self, exer_name):
-    """Change menu's item LABEL"""
-
-    for item in range(self.index(tk.END) + 1):
-        if self.entrycget(item, 'label').startswith('Delete exercise'):
-            self.entryconfig(item, label=f'Delete exercise <{exer_name}>')
-            return
-    raise TypeError('No "Delete exercise" item found')
-
-
 class RegisterCash(Register):
     def __init__(
             self, owner: tk.Widget, *, menu: tk.Menu, **kwargs: dict[str, Any]
