@@ -15,6 +15,7 @@ if __name__ == '__main__':
     root['menu'] = menu
     grid_expand(root)
     frame = RegisterFrame(root, menu=menu)
+    root.geometry('200x850+849+159')
     frame.grid(column=0, row=0, sticky=tk.NSEW)
     grid_expand(frame)
     tk.mainloop()
