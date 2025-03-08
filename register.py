@@ -104,7 +104,6 @@ class RegisterCash(Register):
                 menu.add_command(
                     label=name,
                     command=lambda n=name: self.show_lift(n)) # type: ignore
-                lift.visible = False
 
     def _update_del_menu(self, menu: tk.Menu) -> None:
         menu.delete(0, tk.END)
