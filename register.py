@@ -103,7 +103,7 @@ class RegisterCash(Register):
             if not lift.visible:
                 menu.add_command(
                     label=name,
-                    command=lambda n=name: self.make_visible(n)) # type: ignore
+                    command=lambda n=name: self.show_lift(n)) # type: ignore
                 lift.visible = False
 
     def _update_del_menu(self, menu: tk.Menu) -> None:
@@ -186,7 +186,7 @@ class RegisterCash(Register):
                 lift.image_id, lift.name_id = image_id, name_id
         self.configure(scrollregion = self.bbox("all"))
 
-    def make_visible(self, name: str) -> None:
+    def show_lift(self, name: str) -> None:
         lift = self.exercises.find(name=name)
         assert lift
         lift.visible = True
