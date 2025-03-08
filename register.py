@@ -17,22 +17,8 @@ import geometry as G
 # import exerdir as ED
 import lifts as ED
 
-# saved_photos = []
 EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
              "overhead press","biceps curl", "back plank")
-DirX = dict[str, Union[Image_mod.Image, ImageTk.PhotoImage]]
-try:
-    dirx: DirX = {
-        # Revealed type is "PIL.Image.Image"
-        name: Image_mod.open(path).resize(G.IMAGE)
-        for name, path in zip(
-                EXER_LIST,
-                (os.path.expanduser(f'~/Downloads/{xn.replace(" ", "_")}.jpg')
-                 for xn in EXER_LIST))
-    }
-except FileNotFoundError as e:
-    print(f'{e.filename}: file not found')
-    exit(1)
 
 
 class Register(ScrolledCanvas):
@@ -79,7 +65,7 @@ class RegisterCash(Register):
         self.bind("<Button-1>", self.on_click)
 
     def initialize_exercises(self):
-        for name, img in dirx.items():
+        for name in EXER_LIST:
             self.exercises.add(name)
         self.refresh()
 
