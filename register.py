@@ -75,11 +75,9 @@ class RegisterCash(Register):
             self, owner: tk.Widget, *, menu: tk.Menu, **kwargs: dict[str, Any]
     ):
         super().__init__(owner, **kwargs)
-        self.exer_i = 0
         self.selected_exer: Optional[ED.Lift] = None
         self.exercises = ED.Lifts({})
         assert menu
-        # if menu:
         self.menu = menu
         self.add_menu = add_menu = tk.Menu(menu, tearoff=0)
         menu.add_cascade(label='Add', menu=add_menu)
@@ -115,10 +113,6 @@ class RegisterCash(Register):
                 menu.add_command(
                     label=name,
                     command=lambda n=name: self.remove_from_canvas(n)) # type: ignore
-
-    def _rewind(self):
-        super()._rewind()
-        self.exer_i = 0
 
     def highlight_rect(
             self, exer_row: ED.Lift, fill: Optional[str] = None
@@ -182,7 +176,7 @@ class RegisterCash(Register):
 
     def refresh(self) -> None:
         self.delete('all')
-        self._rewind()
+        super()._rewind()
         for name, lift in self.exercises.items():
             if lift.visible:
                 im: ImageTk.PhotoImage = lift.image
