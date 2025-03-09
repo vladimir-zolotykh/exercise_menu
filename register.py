@@ -129,16 +129,12 @@ class RegisterCash(Register):
             self.highlight_rect(ex, fill='lightblue')
 
     def hide_lift(self, name: str) -> None:
-        lift = self.exercises.find(name=name)
-        assert lift
-        lift.visible = False
+        self.exercises[name].visible = False
         self.update_menu()
         self.refresh()
 
     def show_lift(self, name: str) -> None:
-        lift = self.exercises.find(name=name)
-        assert lift
-        lift.visible = True
+        self.exercises[name].visible = True
         self.update_menu()
         self.refresh()
 
