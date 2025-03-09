@@ -128,24 +128,19 @@ class RegisterCash(Register):
             self.selected_exer = ex
             self.highlight_rect(ex, fill='lightblue')
 
-    def hide_lift(self, exer_name: Optional[str] = None) -> None:
-        """Remove EXER_NAME from canvas"""
+    def hide_lift(self, name: str) -> None:
+        lift = self.exercises.find(name=name)
+        assert lift
+        lift.visible = False
+        self.update_menu()
+        self.refresh()
 
-        ex: ED.Lift | None
-        if exer_name:
-            ex = self.exercises.find(name=exer_name)
-        elif self.selected_exer:
-            ex = self.selected_exer
-        else:
-            showwarning(f'{__name__}.showwarning',
-                    f'Select exercise to delete', parent=self)
-            return
-        assert ex
-        if askokcancel(f'{__name__}.askokcancel',
-                       f'Delete exercise {ex.name}? ', parent=self):
-            ex.visible = False
-            self.update_menu()
-            self.refresh()
+    def show_lift(self, name: str) -> None:
+        lift = self.exercises.find(name=name)
+        assert lift
+        lift.visible = True
+        self.update_menu()
+        self.refresh()
 
     def refresh(self) -> None:
         self.delete('all')
@@ -158,13 +153,6 @@ class RegisterCash(Register):
                 lift.row = row
                 lift.image_id, lift.name_id = image_id, name_id
         self.configure(scrollregion = self.bbox("all"))
-
-    def show_lift(self, name: str) -> None:
-        lift = self.exercises.find(name=name)
-        assert lift
-        lift.visible = True
-        self.update_menu()
-        self.refresh()
 
 class RegisterFrame(tk.Frame):
     def __init__(self, owner, *, menu):
