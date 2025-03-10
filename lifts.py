@@ -31,11 +31,20 @@ class FindArgs(TypedDict, total=False):
 class Lift:
     name: str                   # 'squat' or 'bench press'
     image: ImageTk.PhotoImage
-    visible: bool = False
+    _visible: bool = field(repr=False, init=False, default=False)
     # the attributes below are valid if the LIFT is on the canvas
     row: int | None = None      # canvas row
     image_id: int | None = None
     name_id: int | None = None
+
+    @property
+    def visible(self):
+        return self._visible
+
+    @visible.setter
+    def visible(self, value: bool):
+        print(f'Set {self.name}.visible to {value}')
+        self._visible = value
     
 
 class Lifts(dict[str, Lift]):
