@@ -36,6 +36,7 @@ class Lift:
     row: int | None = None      # canvas row
     image_id: int | None = None
     name_id: int | None = None
+    parent: object = field(repr=False, default=None)
 
     @property
     def visible(self):
@@ -43,22 +44,33 @@ class Lift:
 
     @visible.setter
     def visible(self, value: bool):
-        print(f'Set {self.name}.visible to {value}')
-        self._visible = value
+        if hasattr(self.parent, 'exercises') and value != self._visible:
+            self._visible = value
+            self.parent.update_menu()
+            self.parent.refresh()
     
 
 class Lifts(dict[str, Lift]):
-    def add(self, lift_name: str, image_dir: str | None = None) -> Lift:
-        if image_dir is None:
-            image_dir = os.path.expanduser('~/Downloads/')
+    def __init__(
+            self, parent: object, exercise_names: list[str],
+            image_dir: str | None = None
+    ) -> None:
+        self.parent = parent
+        self.image_dir = (os.path.expanduser('~/Downloads/')
+                          if image_dir is None else image_dir)
+        for name in exercise_names:
+            self.add(name)
+
+    def add(self, lift_name: str) -> Lift:
         if lift_name not in self:
             image = Image_mod.open(os.path.join(
-                image_dir,
+                self.image_dir,
                 f"{lift_name.replace(' ', '_')}.jpg")).resize(G.IMAGE)
             photo = ImageTk.PhotoImage(image)
             saved_photos.append(photo)
-            self[lift_name] = Lift(lift_name, photo)
-            self[lift_name].visible = True
+            lift: Lift = Lift(lift_name, photo, parent=self.parent)
+            self[lift_name] = lift
+            lift.visible = True
         return self[lift_name]
 
     def find(

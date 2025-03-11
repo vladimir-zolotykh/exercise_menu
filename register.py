@@ -17,8 +17,8 @@ import geometry as G
 # import exerdir as ED
 import lifts as ED
 
-EXER_LIST = ("squat", "bench press", "deadlift", "pullup", "front squat",
-             "overhead press","biceps curl", "back plank")
+EXER_LIST = ["squat", "bench press", "deadlift", "pullup", "front squat",
+             "overhead press","biceps curl", "back plank"]
 
 
 class Register(ScrolledCanvas):
@@ -52,22 +52,15 @@ class RegisterCash(Register):
     ):
         super().__init__(owner, **kwargs)
         self.selected_exer: Optional[ED.Lift] = None
-        self.exercises = ED.Lifts({})
         assert menu
         self.menu = menu
         self.add_menu = add_menu = tk.Menu(menu, tearoff=0)
         menu.add_cascade(label='Add', menu=add_menu)
         self.del_menu = del_menu = tk.Menu(menu, name='del_menu', tearoff=0)
         menu.add_cascade(label='Del', menu=del_menu)
-        self.initialize_exercises()
-        self.update_menu()
+        self.exercises = ED.Lifts(self, EXER_LIST)
         self.configure(scrollregion = self.bbox("all"))
         self.bind("<Button-1>", self.on_click)
-
-    def initialize_exercises(self):
-        for name in EXER_LIST:
-            self.exercises.add(name)
-        self.refresh()
 
     def update_menu(self) -> None:
         def callback(
