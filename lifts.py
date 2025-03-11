@@ -46,8 +46,8 @@ class Lift:
     def visible(self, value: bool):
         if hasattr(self.parent, 'exercises') and value != self._visible:
             self._visible = value
-            self.parent.update_menu()
-            self.parent.refresh()
+            self.parent.update_menu() # type: ignore
+            self.parent.refresh() # type: ignore
     
 
 class Lifts(dict[str, Lift]):
