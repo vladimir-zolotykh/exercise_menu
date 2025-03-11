@@ -52,12 +52,13 @@ class Lift:
 
 class Lifts(dict[str, Lift]):
     def __init__(
-            self, parent: object, exercise_names: list[str],
-            image_dir: str | None = None
+            self, parent: object, image_dir: str | None = None
     ) -> None:
         self.parent = parent
         self.image_dir = (os.path.expanduser('~/Downloads/')
                           if image_dir is None else image_dir)
+
+    def initialize(self, exercise_names: list[str]):
         for name in exercise_names:
             self.add(name)
 

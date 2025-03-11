@@ -58,7 +58,8 @@ class RegisterCash(Register):
         menu.add_cascade(label='Add', menu=add_menu)
         self.del_menu = del_menu = tk.Menu(menu, name='del_menu', tearoff=0)
         menu.add_cascade(label='Del', menu=del_menu)
-        self.exercises = ED.Lifts(self, EXER_LIST)
+        self.exercises = ED.Lifts(self)
+        self.exercises.initialize(EXER_LIST)
         self.configure(scrollregion = self.bbox("all"))
         self.bind("<Button-1>", self.on_click)
 
