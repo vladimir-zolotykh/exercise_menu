@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from __future__ import annotations
 import os
 from typing import Union, Optional, TypedDict
 from dataclasses import dataclass, field
 from PIL import Image as Image_mod
 from PIL import ImageTk
 import geometry as G
+import register as R
 saved_photos: list[ImageTk.PhotoImage] = []
 
 @dataclass
@@ -36,8 +38,9 @@ class Lift:
     row: int | None = None      # canvas row
     image_id: int | None = None
     name_id: int | None = None
-    parent: object = field(repr=False, default=None)
-
+    # parent: object = field(repr=False, default=None)
+    parent: R.RegisterCash | None = field(repr=False, default=None)
+    
     @property
     def visible(self):
         return self._visible
@@ -45,14 +48,16 @@ class Lift:
     @visible.setter
     def visible(self, value: bool):
         if hasattr(self.parent, 'exercises') and value != self._visible:
+            assert self.parent
             self._visible = value
-            self.parent.update_menu() # type: ignore
-            self.parent.refresh() # type: ignore
+            self.parent.update_menu()
+            self.parent.refresh()
     
 
 class Lifts(dict[str, Lift]):
     def __init__(
-            self, parent: object, image_dir: str | None = None
+            # self, parent: object, image_dir: str | None = None
+            self, parent: R.RegisterCash, image_dir: str | None = None
     ) -> None:
         self.parent = parent
         self.image_dir = (os.path.expanduser('~/Downloads/')
